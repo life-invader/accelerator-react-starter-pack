@@ -16,6 +16,9 @@ function App(): JSX.Element {
         <Route exact path='/catalog'>
           <CatalogPage />
         </Route>
+        <Route exact path='/guitars/:id'>
+          <Page404 />
+        </Route>
         <Route>
           <Page404 />
         </Route>

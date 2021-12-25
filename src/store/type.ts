@@ -41,6 +41,8 @@ export type GuitarWithComments = {
 
 export type RootState = {
   guitars: GuitarWithComments[],
+  similarGuitars: Guitar[],
+  cart: number,
 }
 
 export type State = RootReducerType;

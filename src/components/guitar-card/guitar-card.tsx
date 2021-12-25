@@ -1,18 +1,6 @@
 import { Link } from 'react-router-dom';
 import { GuitarWithComments } from '../../store/type';
-import { renderRatingStars } from '../../utils';
-
-const paintedStar = (
-  <svg width="12" height="11" aria-hidden="true">
-    <use xlinkHref="#icon-full-star"></use>
-  </svg>
-);
-
-const unpaintedStar = (
-  <svg width="12" height="11" aria-hidden="true">
-    <use xlinkHref="#icon-star"></use>
-  </svg>
-);
+import GuitarRating from '../guitar-rating/guitar-rating';
 
 function GuitarCard({ price, name, previewImg, rating, comments }: GuitarWithComments): JSX.Element {
 
@@ -22,7 +10,7 @@ function GuitarCard({ price, name, previewImg, rating, comments }: GuitarWithCom
       <div className="product-card__info">
         <div className="rate product-card__rate" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
 
-          {renderRatingStars(rating, paintedStar, unpaintedStar)}
+          <GuitarRating rating={rating} />
 
           <span className="rate__count">{comments.length}</span><span className="rate__message"></span>
         </div>

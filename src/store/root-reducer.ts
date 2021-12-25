@@ -1,15 +1,20 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { loadGuitars } from './action';
+import { loadGuitars, loadSimilarGuitarsByName } from './action';
 import { RootState } from './type';
 
 const initialState: RootState = {
   guitars: [],
+  similarGuitars: [],
+  cart: 0,
 };
 
 export const rootReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(loadGuitars, (state, action) => {
       state.guitars = action.payload;
+    })
+    .addCase(loadSimilarGuitarsByName, (state, action) => {
+      state.similarGuitars = action.payload;
     });
 });
 
