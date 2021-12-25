@@ -1,29 +1,33 @@
 import { Link } from 'react-router-dom';
+import { GuitarWithComments } from '../../store/type';
+import { renderRatingStars } from '../../utils';
 
-function GuitarCard() {
+const paintedStar = (
+  <svg width="12" height="11" aria-hidden="true">
+    <use xlinkHref="#icon-full-star"></use>
+  </svg>
+);
+
+const unpaintedStar = (
+  <svg width="12" height="11" aria-hidden="true">
+    <use xlinkHref="#icon-star"></use>
+  </svg>
+);
+
+function GuitarCard({ price, name, previewImg, rating, comments }: GuitarWithComments): JSX.Element {
+
   return (
     <div className="product-card">
-      <img src="img/content/guitar-2.jpg" width="75" height="190" alt="СURT Z30 Plus Acoustics" />
+      <img src={previewImg} width="75" height="190" alt={name} />
       <div className="product-card__info">
         <div className="rate product-card__rate" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-star"></use>
-          </svg><span className="rate__count">9</span><span className="rate__message"></span>
+
+          {renderRatingStars(rating, paintedStar, unpaintedStar)}
+
+          <span className="rate__count">{comments.length}</span><span className="rate__message"></span>
         </div>
-        <p className="product-card__title">СURT Z30 Plus Acoustics</p>
-        <p className="product-card__price"><span className="visually-hidden">Цена:</span>129 500 ₽
+        <p className="product-card__title">{name}</p>
+        <p className="product-card__price"><span className="visually-hidden">Цена:</span>{price} ₽
         </p>
       </div>
       <div className="product-card__buttons">

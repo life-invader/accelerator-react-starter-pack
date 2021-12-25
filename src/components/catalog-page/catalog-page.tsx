@@ -1,7 +1,12 @@
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import GuitarCard from '../guitar-card/guitar-card';
 
+import { selectAllGuitars } from '../../store/selector';
+
 function CatalogPage(): JSX.Element {
+  const guitars = useSelector(selectAllGuitars);
+
   return (
     <main className='page-content'>
       <div className='container'>
@@ -78,15 +83,10 @@ function CatalogPage(): JSX.Element {
           </div>
           <div className='cards catalog__cards'>
 
-            <GuitarCard />
-            <GuitarCard />
-            <GuitarCard />
-            <GuitarCard />
-            <GuitarCard />
-            <GuitarCard />
-            <GuitarCard />
-            <GuitarCard />
-            <GuitarCard />
+            {
+              guitars &&
+              guitars.map((guitar) => <GuitarCard key={guitar.id} {...guitar} />)
+            }
 
           </div>
           <div className='pagination page-content__pagination'>
