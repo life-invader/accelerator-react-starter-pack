@@ -1,13 +1,20 @@
 import { loadGuitars, loadSimilarGuitarsByName } from './action';
 import { ThunkActionResult } from './type';
-import { ApiRoute } from '../const';
+import { ApiRoute, QueryParameters, SortType, EmbedParameters, SortOrder } from '../const';
 
-export const fetchGuitars = (): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
-  const response = await api.get(ApiRoute.Guitars, {
+type QueryParametersType = {
+  [QueryParameters.Sort]?: typeof SortType.Price | typeof SortType.Rating,
+  [QueryParameters.Order]?: typeof SortOrder.Ascending | typeof SortOrder.Descending,
+}
+
+export const fetchGuitars = (queryParameters?: QueryParametersType): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
+  const apiParams = {
     params: {
-      _embed: 'comments',
+      [QueryParameters.Embed]: EmbedParameters.Comments,
+      ...queryParameters,
     },
-  });
+  };
+  const response = await api.get(ApiRoute.Guitars, apiParams);
 
   dispatch(loadGuitars(response.data));
 };

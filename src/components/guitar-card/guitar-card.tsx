@@ -12,7 +12,7 @@ function GuitarCard({ price, name, previewImg, rating, comments }: GuitarWithCom
 
           <GuitarRating rating={rating} />
 
-          <span className="rate__count">{comments.length}</span><span className="rate__message"></span>
+          <span className="rate__count">{comments ? comments.length : 0}</span><span className="rate__message"></span>
         </div>
         <p className="product-card__title">{name}</p>
         <p className="product-card__price"><span className="visually-hidden">Цена:</span>{price} ₽

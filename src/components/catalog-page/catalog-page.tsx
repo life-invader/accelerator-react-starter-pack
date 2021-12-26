@@ -1,11 +1,45 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import GuitarCard from '../guitar-card/guitar-card';
 
 import { selectAllGuitars } from '../../store/selector';
+import { fetchGuitars } from '../../store/api-action';
+import { QueryParameters, SortOrder, SortType } from '../../const';
+import React, { useState } from 'react';
 
 function CatalogPage(): JSX.Element {
+  const dispatch = useDispatch();
   const guitars = useSelector(selectAllGuitars);
+  const [currentSort, setCurrentSort] = useState<typeof SortType.Rating | typeof SortType.Price | undefined>(undefined);
+  const [currentSortOrder, setCurrentSortOrder] = useState<typeof SortOrder.Ascending | typeof SortOrder.Descending | undefined>(undefined);
+
+  const handleSortButtonClick = (evt: React.BaseSyntheticEvent) => {
+    if (currentSort === evt.target.dataset.sort) {
+      return;
+    }
+
+    setCurrentSort(evt.target.dataset.sort);
+    dispatch(fetchGuitars({
+      [QueryParameters.Sort]: evt.target.dataset.sort,
+      [QueryParameters.Order]: currentSortOrder || SortOrder.Ascending,
+    }));
+  };
+
+  const handleOrderSortButtonClick = (evt: React.BaseSyntheticEvent) => {
+    if (currentSortOrder === evt.target.dataset.order) {
+      return;
+    }
+
+    if (!currentSort) {
+      setCurrentSort(SortType.Price);
+    }
+
+    setCurrentSortOrder(evt.target.dataset.order);
+    dispatch(fetchGuitars({
+      [QueryParameters.Sort]: currentSort || SortType.Price,
+      [QueryParameters.Order]: evt.target.dataset.order,
+    }));
+  };
 
   return (
     <main className='page-content'>
@@ -73,12 +107,12 @@ function CatalogPage(): JSX.Element {
           <div className='catalog-sort'>
             <h2 className='catalog-sort__title'>Сортировать:</h2>
             <div className='catalog-sort__type'>
-              <button className='catalog-sort__type-button catalog-sort__type-button--active' aria-label='по цене' tabIndex={-1}>по цене</button>
-              <button className='catalog-sort__type-button' aria-label='по популярности'>по популярности</button>
+              <button className={`catalog-sort__type-button ${currentSort === SortType.Price ? 'catalog-sort__type-button--active' : ''}`} aria-label='по цене' tabIndex={-1} data-sort={SortType.Price} onClick={handleSortButtonClick} >по цене</button>
+              <button className={`catalog-sort__type-button ${currentSort === SortType.Rating ? 'catalog-sort__type-button--active' : ''}`} aria-label='по популярности' data-sort={SortType.Rating} onClick={handleSortButtonClick} >по популярности</button>
             </div>
             <div className='catalog-sort__order'>
-              <button className='catalog-sort__order-button catalog-sort__order-button--up catalog-sort__order-button--active' aria-label='По возрастанию' tabIndex={-1}></button>
-              <button className='catalog-sort__order-button catalog-sort__order-button--down' aria-label='По убыванию'></button>
+              <button className={`catalog-sort__order-button catalog-sort__order-button--up ${currentSortOrder === SortOrder.Ascending ? 'catalog-sort__order-button--active' : ''}`} aria-label='По возрастанию' tabIndex={-1} data-order={SortOrder.Ascending} onClick={handleOrderSortButtonClick}></button>
+              <button className={`catalog-sort__order-button catalog-sort__order-button--down ${currentSortOrder === SortOrder.Descending ? 'catalog-sort__order-button--active' : ''}`} aria-label='По убыванию' data-order={SortOrder.Descending} onClick={handleOrderSortButtonClick} ></button>
             </div>
           </div>
           <div className='cards catalog__cards'>
