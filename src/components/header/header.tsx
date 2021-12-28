@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectCart } from '../../store/selector';
+import { selectCart } from '../../store/guitars/selectors';
 import HeaderSearch from './header-search/header-search';
 
 function Header() {

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { fetchSimilarGuitarsByName } from '../../../store/api-action';
-import { selectSimilarGuitars } from '../../../store/selector';
+import { selectSimilarGuitars } from '../../../store/guitars/selectors';
 
 function HeaderSearch() {
   const [isOpened, setIsOpened] = useState(false);

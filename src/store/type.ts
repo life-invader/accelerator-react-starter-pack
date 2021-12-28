@@ -1,6 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { AxiosInstance } from 'axios';
-import { RootReducerType } from './root-reducer';
+import { RootState } from './root-reducer';
 import { Action } from 'redux';
 
 export type GuitarComment = {
@@ -39,11 +39,11 @@ export type GuitarWithComments = {
   comments: GuitarComment[],
 }
 
-export type RootState = {
+export type GuitarReducerType = {
   guitars: GuitarWithComments[],
   similarGuitars: Guitar[],
   cart: number,
 }
 
-export type State = RootReducerType;
+export type State = RootState;
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;

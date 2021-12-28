@@ -1,4 +1,5 @@
-import { loadGuitars, loadSimilarGuitarsByName } from './action';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { loadGuitars, loadSimilarGuitarsByName } from './guitars/actions';
 import { ThunkActionResult } from './type';
 import { ApiRoute, QueryParameters, SortType, EmbedParameters, SortOrder } from '../const';
 
@@ -7,7 +8,7 @@ type QueryParametersType = {
   [QueryParameters.Order]?: typeof SortOrder.Ascending | typeof SortOrder.Descending,
 }
 
-export const fetchGuitars = (queryParameters?: QueryParametersType): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
+export const fetchGuitars = (queryParameters?: any): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
   const apiParams = {
     params: {
       [QueryParameters.Embed]: EmbedParameters.Comments,
