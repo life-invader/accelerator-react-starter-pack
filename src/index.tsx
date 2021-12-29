@@ -6,9 +6,9 @@ import { Provider } from 'react-redux';
 import App from './components/app/app';
 import { store } from './store/store';
 
-import { fetchGuitars } from './store/api-action';
+// import { fetchGuitars } from './store/api-action';
 
-store.dispatch(fetchGuitars());
+// store.dispatch(fetchGuitars());
 
 ReactDOM.render(
   <React.StrictMode>

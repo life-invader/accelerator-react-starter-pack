@@ -1,33 +1,51 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import GuitarCard from '../guitar-card/guitar-card';
 
-import { selectAllGuitars } from '../../store/guitars/selectors';
-import { selectSortType, selectSortOrder } from '../../store/filters/selectors';
+import { selectAllGuitars, selectPriceRangePlaceholders } from '../../store/guitars/selectors';
+import { selectSortType, selectSortOrder, selectPriceRange, selectGuitarsStringsCount, selectGuitarTypes } from '../../store/filters/selectors';
 import { fetchGuitars } from '../../store/api-action';
 import { QueryParameters, SortOrder, SortType } from '../../const';
-import React, { useState } from 'react';
-import { loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from '../../store/filters/actions';
+import React, { useEffect, useRef, useState } from 'react';
+import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from '../../store/filters/actions';
+import { GuitarWithComments } from '../../store/type';
+
+export const getPriceRange = (guitars: GuitarWithComments[]) => {
+  const minPrice = guitars.slice().sort((guitarA, guitarB) => guitarA.price - guitarB.price);
+  const priceMin = minPrice[0]?.price;
+  const maxPrice = guitars.slice().sort((guitarA, guitarB) => guitarA.price - guitarB.price);
+  const priceMax = maxPrice[maxPrice.length - 1]?.price;
+  return ({
+    priceMin,
+    priceMax,
+  });
+};
 
 function CatalogPage(): JSX.Element {
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const guitars = useSelector(selectAllGuitars);
   const guitarsSortOrder = useSelector(selectSortOrder);
   const guitarsSortType = useSelector(selectSortType);
-
-  // const [currentSort, setCurrentSort] = useState<typeof SortType.Rating | typeof SortType.Price | undefined>(undefined);
-  // const [currentSortOrder, setCurrentSortOrder] = useState<typeof SortOrder.Ascending | typeof SortOrder.Descending | undefined>(undefined);
+  const guitarsPriceRange = useSelector(selectPriceRange);
+  const guitarPriceRangePlaceholders = useSelector(selectPriceRangePlaceholders);
+  const guitarsStringsCount = useSelector(selectGuitarsStringsCount);
+  const guitarTypes = useSelector(selectGuitarTypes);
 
   const handleSortTypeButtonClick = (evt: React.BaseSyntheticEvent) => {
-    if (guitarsSortType === evt.target.dataset.sort) {
+    const currentSortType = evt.target.dataset.sort as string;
+
+    if (guitarsSortType === currentSortType) {
       return;
     }
 
-    dispatch(loadSortType(evt.target.dataset.sort));
+    dispatch(loadSortType(currentSortType));
 
     if (!guitarsSortOrder) {
       dispatch(loadSortOrder(SortOrder.Ascending));
@@ -40,11 +58,12 @@ function CatalogPage(): JSX.Element {
   };
 
   const handleSortOrderButtonClick = (evt: React.BaseSyntheticEvent) => {
-    if (guitarsSortOrder === evt.target.dataset.order) {
+    const currentSortOrder = evt.target.dataset.order as string;
+    if (guitarsSortOrder === currentSortOrder) {
       return;
     }
 
-    dispatch(loadSortOrder(evt.target.dataset.order));
+    dispatch(loadSortOrder(currentSortOrder));
 
     if (!guitarsSortType) {
       dispatch(loadSortType(SortType.Price));
@@ -67,8 +86,8 @@ function CatalogPage(): JSX.Element {
     }
   };
 
-  const handleGuitarStringsCountChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const stringsCount = evt.target.id;
+  const handleGuitarStringsCountChange = (evt: React.BaseSyntheticEvent) => {
+    const stringsCount = evt.target.dataset.strings as string;
 
     if (evt.target.checked) {
       dispatch(loadGuitarStringsCount(stringsCount));
@@ -76,6 +95,95 @@ function CatalogPage(): JSX.Element {
       dispatch(removeGuitarStringsCount(stringsCount));
     }
   };
+
+  const handlePriceRangeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.value === '') {
+      return;
+    }
+
+    const price = Number(evt.target.value);
+    const priceFieldName = evt.target;
+
+    if (priceFieldName.id === 'priceMin' && price < guitarPriceRangePlaceholders.priceMin) {
+      priceFieldName.value = guitarPriceRangePlaceholders.priceMin.toString();
+      dispatch(loadGuitarPriceRange({
+        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMin,
+      }));
+      return;
+    }
+
+    if (priceFieldName.id === 'priceMin' && price > guitarPriceRangePlaceholders.priceMax) {
+      priceFieldName.value = guitarPriceRangePlaceholders.priceMax.toString();
+      dispatch(loadGuitarPriceRange({
+        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMax,
+      }));
+      return;
+    }
+
+    if (priceFieldName.id === 'priceMax' && price > guitarPriceRangePlaceholders.priceMax) {
+      priceFieldName.value = guitarPriceRangePlaceholders.priceMax.toString();
+      dispatch(loadGuitarPriceRange({
+        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMax,
+      }));
+      return;
+    }
+
+    if (priceFieldName.id === 'priceMax' && price < guitarPriceRangePlaceholders.priceMin) {
+      priceFieldName.value = guitarPriceRangePlaceholders.priceMin.toString();
+      dispatch(loadGuitarPriceRange({
+        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMin,
+      }));
+      return;
+    }
+
+    if (priceFieldName.id === 'priceMin' && price > guitarsPriceRange.priceMax) {
+      priceFieldName.value = guitarsPriceRange.priceMax.toString();
+      dispatch(loadGuitarPriceRange({
+        [priceFieldName.id]: guitarsPriceRange.priceMax,
+      }));
+      return;
+    }
+
+    if (priceFieldName.id === 'priceMax' && price < guitarsPriceRange.priceMin) {
+      priceFieldName.value = guitarsPriceRange.priceMin.toString();
+      dispatch(loadGuitarPriceRange({
+        [priceFieldName.id]: guitarsPriceRange.priceMin,
+      }));
+      return;
+    }
+
+    if ((priceFieldName.id === 'priceMin' && price === guitarsPriceRange.priceMin) || (priceFieldName.id === 'priceMax' && price === guitarsPriceRange.priceMax)) {
+      return;
+    }
+
+    dispatch(loadGuitarPriceRange({
+      [priceFieldName.id]: price,
+    }));
+  };
+
+  // Дефолтный эффект для первичной загрузки гитар
+  // useEffect(() => {
+  //   dispatch(fetchGuitars());
+  // }, []);
+
+  useEffect(() => {
+    dispatch(fetchGuitars());
+
+    const params = new URLSearchParams();
+
+    console.log('2nd');
+
+    params.delete('type');
+    guitarTypes.forEach((type) => params.append('type', type));
+
+    params.delete('stringCount');
+    guitarsStringsCount.forEach((stringCount) => params.append('stringCount', stringCount));
+
+    guitarsPriceRange.priceMin && params.set('price_gte', guitarsPriceRange.priceMin.toString());
+    guitarsPriceRange.priceMax && params.set('price_lte', guitarsPriceRange.priceMax.toString());
+
+    history.push(`${location.pathname}?${params.toString()}`);
+  }, [dispatch, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname]);
 
   return (
     <main className='page-content'>
@@ -97,11 +205,11 @@ function CatalogPage(): JSX.Element {
               <div className='catalog-filter__price-range'>
                 <div className='form-input'>
                   <label className='visually-hidden'>Минимальная цена</label>
-                  <input type='number' placeholder='1 000' id='priceMin' name='от' />
+                  <input type='number' placeholder={`${guitarPriceRangePlaceholders.priceMin}`} min={`${guitarsPriceRange.priceMin}`} id='priceMin' name='от' onBlur={handlePriceRangeChange} />
                 </div>
                 <div className='form-input'>
                   <label className='visually-hidden'>Максимальная цена</label>
-                  <input type='number' placeholder='30 000' id='priceMax' name='до' />
+                  <input type='number' placeholder={`${guitarPriceRangePlaceholders.priceMax}`} max={`${guitarPriceRangePlaceholders.priceMax}`} id='priceMax' name='до' onBlur={handlePriceRangeChange} />
                 </div>
               </div>
             </fieldset>
@@ -123,19 +231,19 @@ function CatalogPage(): JSX.Element {
             <fieldset className='catalog-filter__block'>
               <legend className='catalog-filter__block-title'>Количество струн</legend>
               <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='4-strings' name='4-strings' onChange={handleGuitarStringsCountChange} />
+                <input className='visually-hidden' type='checkbox' id='4-strings' name='4-strings' data-strings='4' onChange={handleGuitarStringsCountChange} />
                 <label htmlFor='4-strings'>4</label>
               </div>
               <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='6-strings' name='6-strings' onChange={handleGuitarStringsCountChange} />
+                <input className='visually-hidden' type='checkbox' id='6-strings' name='6-strings' data-strings='6' onChange={handleGuitarStringsCountChange} />
                 <label htmlFor='6-strings'>6</label>
               </div>
               <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='7-strings' name='7-strings' onChange={handleGuitarStringsCountChange} />
+                <input className='visually-hidden' type='checkbox' id='7-strings' name='7-strings' data-strings='7' onChange={handleGuitarStringsCountChange} />
                 <label htmlFor='7-strings'>7</label>
               </div>
               <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='12-strings' name='12-strings' onChange={handleGuitarStringsCountChange} />
+                <input className='visually-hidden' type='checkbox' id='12-strings' name='12-strings' data-strings='12' onChange={handleGuitarStringsCountChange} />
                 <label htmlFor='12-strings'>12</label>
               </div>
             </fieldset>

@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from './actions';
 
 type FiltersReducerType = {
-  guitarPriceRange: { min: 0, max: 0 },
+  guitarPriceRange: { priceMin: number, priceMax: number },
   guitarTypes: string[],
   guitarStringsCount: string[],
   sortOrder: string,
@@ -10,7 +10,7 @@ type FiltersReducerType = {
 }
 
 const initialState: FiltersReducerType = {
-  guitarPriceRange: { min: 0, max: 0 },
+  guitarPriceRange: { priceMin: 0, priceMax: 0 },
   guitarTypes: [],
   guitarStringsCount: [],
   sortOrder: '',
@@ -20,7 +20,7 @@ const initialState: FiltersReducerType = {
 export const filtersReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(loadGuitarPriceRange, (state, action) => {
-      state.guitarPriceRange = action.payload;
+      state.guitarPriceRange = { ...state.guitarPriceRange, ...action.payload };
     })
     .addCase(loadGuitarTypes, (state, action) => {
       state.guitarTypes.push(action.payload);

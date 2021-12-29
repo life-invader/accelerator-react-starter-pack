@@ -7,6 +7,8 @@ export const QueryParameters = {
   Like: 'name_like',
   Sort: '_sort',
   Order: '_order',
+  Type: 'type',
+  StringCount: 'stringCount',
 } as const;
 
 export const SortType = {

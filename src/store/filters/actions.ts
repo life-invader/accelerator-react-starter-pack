@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 
-export const loadGuitarPriceRange = createAction('Load-guitars-price-range', (priceRange: { min: 0, max: 0 }) => ({
+export const loadGuitarPriceRange = createAction('Load-guitars-price-range', (priceRange: { priceMin?: number, priceMax?: number }) => ({
   payload: priceRange,
 }));
 
