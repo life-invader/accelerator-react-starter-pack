@@ -4,7 +4,7 @@ export const loadGuitarPriceRange = createAction('Load-guitars-price-range', (pr
   payload: priceRange,
 }));
 
-export const loadGuitarTypes = createAction('Load-guitar-types', (guitarTypes: string) => ({
+export const loadGuitarTypes = createAction('Load-guitar-types', (guitarTypes: string | string[]) => ({
   payload: guitarTypes,
 }));
 
@@ -12,7 +12,7 @@ export const removeGuitarTypes = createAction('Remove-guitar-types', (guitarType
   payload: guitarTypes,
 }));
 
-export const loadGuitarStringsCount = createAction('Load-guitar-strings-count', (stringsCount: string) => ({
+export const loadGuitarStringsCount = createAction('Load-guitar-strings-count', (stringsCount: string | string[]) => ({
   payload: stringsCount,
 }));
 

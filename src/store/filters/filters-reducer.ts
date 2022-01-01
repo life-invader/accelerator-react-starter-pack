@@ -23,13 +23,21 @@ export const filtersReducer = createReducer(initialState, (builder) => {
       state.guitarPriceRange = { ...state.guitarPriceRange, ...action.payload };
     })
     .addCase(loadGuitarTypes, (state, action) => {
+      if (Array.isArray(action.payload)) {
+        state.guitarTypes = action.payload;
+        return;
+      }
       state.guitarTypes.push(action.payload);
     })
     .addCase(removeGuitarTypes, (state, action) => {
       state.guitarTypes = state.guitarTypes.filter((type) => type !== action.payload);
     })
     .addCase(loadGuitarStringsCount, (state, action) => {
-      state.guitarStringsCount.push(action.payload[0]);
+      if (Array.isArray(action.payload)) {
+        state.guitarStringsCount = action.payload;
+        return;
+      }
+      state.guitarStringsCount.push(action.payload);
     })
     .addCase(removeGuitarStringsCount, (state, action) => {
       state.guitarStringsCount = state.guitarStringsCount.filter((count) => count !== action.payload);

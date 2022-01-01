@@ -16,6 +16,10 @@ export const fetchGuitars = (queryParameters?: any): ThunkActionResult => async 
       [QueryParameters.Embed]: EmbedParameters.Comments,
       [QueryParameters.StringCount]: _getState().filters.guitarStringsCount,
       [QueryParameters.Type]: _getState().filters.guitarTypes,
+      [QueryParameters.Order]: _getState().filters.sortOrder || null,
+      [QueryParameters.Sort]: _getState().filters.sortType || null,
+      'price_gte': _getState().filters.guitarPriceRange.priceMin || null,
+      'price_lte': _getState().filters.guitarPriceRange.priceMax || null,
       ...queryParameters,
     },
   };
