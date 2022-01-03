@@ -9,6 +9,8 @@ export const QueryParameters = {
   Order: '_order',
   Type: 'type',
   StringCount: 'stringCount',
+  PriceGte: 'price_gte',
+  PriceLte: 'price_lte',
 } as const;
 
 export const SortType = {

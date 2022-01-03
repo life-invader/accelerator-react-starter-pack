@@ -1,76 +1,23 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import GuitarCard from '../guitar-card/guitar-card';
-
-import { selectAllGuitars, selectPriceRangePlaceholders } from '../../store/guitars/selectors';
+import { selectDisplayedGuitars, selectGuitarsByCurrentType, selectPriceRangePlaceholders } from '../../store/guitars/selectors';
 import { selectSortType, selectSortOrder, selectPriceRange, selectGuitarsStringsCount, selectGuitarTypes } from '../../store/filters/selectors';
-import { fetchGuitars } from '../../store/api-action';
-import { QueryParameters, SortOrder, SortType } from '../../const';
-import React, { useEffect, useRef, useState } from 'react';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from '../../store/filters/actions';
-import { GuitarWithComments } from '../../store/type';
-
-export const getPriceRange = (guitars: GuitarWithComments[]) => {
-  const minPrice = guitars.slice().sort((guitarA, guitarB) => guitarA.price - guitarB.price);
-  const priceMin = minPrice[0]?.price;
-  const maxPrice = guitars.slice().sort((guitarA, guitarB) => guitarA.price - guitarB.price);
-  const priceMax = maxPrice[maxPrice.length - 1]?.price;
-  return ({
-    priceMin,
-    priceMax,
-  });
-};
-
-const GuitarType = {
-  Acoustic: 'acoustic',
-  Electric: 'electric',
-  Ukulele: 'ukulele',
-};
-
-const GuitarInfo = {
-  [GuitarType.Acoustic]: {
-    name: 'Акустические гитары',
-    id: 'acoustic',
-  },
-  [GuitarType.Electric]: {
-    name: 'Электрогитары',
-    id: 'electric',
-  },
-  [GuitarType.Ukulele]: {
-    name: 'Укулеле',
-    id: 'ukulele',
-  },
-};
-
-const StringsCount = [
-  {
-    name: '4-strings',
-    count: 4,
-  },
-  {
-    name: '6-strings',
-    count: 6,
-  },
-  {
-    name: '7-strings',
-    count: 7,
-  },
-  {
-    name: '12-strings',
-    count: 12,
-  },
-];
+import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-action';
+import GuitarCard from '../guitar-card/guitar-card';
+import { SortOrder, SortType } from '../../constants/const';
+import { GuitarType, GuitarInfo, StringsCount } from '../../constants/guitars';
 
 function CatalogPage(): JSX.Element {
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [firstTimeLoad, setFirstTimeLoad] = useState(false);
 
-  const guitars = useSelector(selectAllGuitars);
+  const displayedGuitars = useSelector(selectDisplayedGuitars);
+  const guitarsByType = useSelector(selectGuitarsByCurrentType);
   const guitarsSortOrder = useSelector(selectSortOrder);
   const guitarsSortType = useSelector(selectSortType);
   const guitarsPriceRange = useSelector(selectPriceRange);
@@ -90,11 +37,6 @@ function CatalogPage(): JSX.Element {
     if (!guitarsSortOrder) {
       dispatch(loadSortOrder(SortOrder.Ascending));
     }
-    // dispatch(fetchGuitars({
-    //   [QueryParameters.Sort]: evt.target.dataset.sort,
-    //   [QueryParameters.Order]: guitarsSortType || SortType.Price,
-    // }));
-
   };
 
   const handleSortOrderButtonClick = (evt: React.BaseSyntheticEvent) => {
@@ -108,12 +50,6 @@ function CatalogPage(): JSX.Element {
     if (!guitarsSortType) {
       dispatch(loadSortType(SortType.Price));
     }
-
-    // dispatch(fetchGuitars({
-    //   [QueryParameters.Sort]: guitarsSortOrder || SortOrder.Ascending,
-    //   [QueryParameters.Order]: evt.target.dataset.order,
-    // }));
-
   };
 
   const handleGuitarTypeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,14 +73,26 @@ function CatalogPage(): JSX.Element {
   };
 
   const handlePriceRangeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (evt.target.value === '') {
-      return;
-    }
-
     const price = Number(evt.target.value);
     const priceFieldName = evt.target;
 
-    if (priceFieldName.id === 'priceMin' && price < guitarPriceRangePlaceholders.priceMin) {
+    if (evt.target.value === '' && priceFieldName.id === 'priceMin') {
+      dispatch(loadGuitarPriceRange({
+        priceMin: guitarPriceRangePlaceholders.priceMin,
+      }));
+
+      return;
+    }
+
+    if (evt.target.value === '' && priceFieldName.id === 'priceMax') {
+      dispatch(loadGuitarPriceRange({
+        priceMax: guitarPriceRangePlaceholders.priceMax,
+      }));
+
+      return;
+    }
+
+    if (priceFieldName.id === 'priceMin' && price <= guitarPriceRangePlaceholders.priceMin) {
       priceFieldName.value = guitarPriceRangePlaceholders.priceMin.toString();
       dispatch(loadGuitarPriceRange({
         [priceFieldName.id]: guitarPriceRangePlaceholders.priceMin,
@@ -160,7 +108,7 @@ function CatalogPage(): JSX.Element {
       return;
     }
 
-    if (priceFieldName.id === 'priceMax' && price > guitarPriceRangePlaceholders.priceMax) {
+    if (priceFieldName.id === 'priceMax' && price >= guitarPriceRangePlaceholders.priceMax) {
       priceFieldName.value = guitarPriceRangePlaceholders.priceMax.toString();
       dispatch(loadGuitarPriceRange({
         [priceFieldName.id]: guitarPriceRangePlaceholders.priceMax,
@@ -201,17 +149,13 @@ function CatalogPage(): JSX.Element {
     }));
   };
 
-  // Дефолтный эффект для первичной загрузки гитар
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
     if (!searchParams.toString()) {
-      setIsLoaded(true);
-      console.log('1st');
+      setFirstTimeLoad(true);
       return;
     }
-
-    console.log('1st');
 
     dispatch(loadGuitarTypes(searchParams.getAll('type')));
     dispatch(loadGuitarStringsCount(searchParams.getAll('stringCount')));
@@ -226,20 +170,18 @@ function CatalogPage(): JSX.Element {
       }));
     }
 
-    setIsLoaded(true);
-
+    setFirstTimeLoad(true);
   }, []);
 
   useEffect(() => {
-    if (!isLoaded) {
+    if (!firstTimeLoad) {
+      dispatch(fetchGuitars());
       return;
     }
 
-    dispatch(fetchGuitars());
+    dispatch(fetchDisplayedGuitars());
 
     const params = new URLSearchParams();
-
-    console.log('2nd');
 
     params.delete('type');
     guitarTypes.forEach((type) => params.append('type', type));
@@ -251,7 +193,7 @@ function CatalogPage(): JSX.Element {
     guitarsPriceRange.priceMax && params.set('price_lte', guitarsPriceRange.priceMax.toString());
 
     history.push(`${location.pathname}?${params.toString()}`);
-  }, [dispatch, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname, guitarsSortOrder, guitarsSortType, isLoaded]);
+  }, [dispatch, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname, guitarsSortOrder, guitarsSortType, firstTimeLoad]);
 
   return (
     <main className='page-content'>
@@ -284,19 +226,6 @@ function CatalogPage(): JSX.Element {
             <fieldset className='catalog-filter__block'>
               <legend className='catalog-filter__block-title'>Тип гитар</legend>
 
-              {/* <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='acoustic' name='acoustic' onChange={handleGuitarTypeChange} />
-                <label htmlFor='acoustic'>Акустические гитары</label>
-              </div>
-              <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='electric' name='electric' onChange={handleGuitarTypeChange} />
-                <label htmlFor='electric'>Электрогитары</label>
-              </div>
-              <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='ukulele' name='ukulele' onChange={handleGuitarTypeChange} />
-                <label htmlFor='ukulele'>Укулеле</label>
-              </div> */}
-
               {
                 Object.values(GuitarType).map((guitarType) => (
                   <div key={guitarType} className='form-checkbox catalog-filter__block-item'>
@@ -310,27 +239,10 @@ function CatalogPage(): JSX.Element {
             <fieldset className='catalog-filter__block'>
               <legend className='catalog-filter__block-title'>Количество струн</legend>
 
-              {/* <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='4-strings' name='4-strings' data-strings='4' onChange={handleGuitarStringsCountChange} />
-                <label htmlFor='4-strings'>4</label>
-              </div>
-              <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='6-strings' name='6-strings' data-strings='6' onChange={handleGuitarStringsCountChange} />
-                <label htmlFor='6-strings'>6</label>
-              </div>
-              <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='7-strings' name='7-strings' data-strings='7' onChange={handleGuitarStringsCountChange} />
-                <label htmlFor='7-strings'>7</label>
-              </div>
-              <div className='form-checkbox catalog-filter__block-item'>
-                <input className='visually-hidden' type='checkbox' id='12-strings' name='12-strings' data-strings='12' onChange={handleGuitarStringsCountChange} />
-                <label htmlFor='12-strings'>12</label>
-              </div> */}
-
               {
                 StringsCount.map((strings) => (
                   <div key={strings.name} className='form-checkbox catalog-filter__block-item'>
-                    <input className='visually-hidden' type='checkbox' id={strings.name} name={strings.name} data-strings={strings.count} checked={guitarsStringsCount.includes(strings.count.toString())} onChange={handleGuitarStringsCountChange} />
+                    <input className='visually-hidden' type='checkbox' id={strings.name} name={strings.name} data-strings={strings.count} checked={guitarsStringsCount.includes(strings.count.toString())} onChange={handleGuitarStringsCountChange} disabled={!guitarsByType.map((guitar) => guitar.stringCount).includes(strings.count)} />
                     <label htmlFor={strings.name}>{strings.count}</label>
                   </div>
                 ))
@@ -352,22 +264,24 @@ function CatalogPage(): JSX.Element {
           <div className='cards catalog__cards'>
 
             {
-              guitars &&
-              guitars.map((guitar) => <GuitarCard key={guitar.id} {...guitar} />)
+              displayedGuitars &&
+              displayedGuitars.map((guitar) => <GuitarCard key={guitar.id} {...guitar} />)
             }
 
           </div>
           <div className='pagination page-content__pagination'>
             <ul className='pagination__list'>
-              <li className='pagination__page pagination__page--active'><a className='link pagination__page-link' href='1'>1</a>
+              <li className='pagination__page pagination__page--active'>
+                <a className='link pagination__page-link' href='catalog/page_1'>1</a>
               </li>
               <li className='pagination__page'>
-                <a className='link pagination__page-link' href=''>2</a>
+                <a className='link pagination__page-link' href='catalog/page_1'>2</a>
               </li>
-              <li className='pagination__page'><a className='link pagination__page-link' href='3'>3</a>
+              <li className='pagination__page'>
+                <a className='link pagination__page-link' href='/catalog/page_1'>3</a>
               </li>
               <li className='pagination__page pagination__page--next' id='next'>
-                <a className='link pagination__page-link' href='2'>Далее</a>
+                <a className='link pagination__page-link' href='3'>Далее</a>
               </li>
             </ul>
           </div>

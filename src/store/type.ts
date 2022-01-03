@@ -41,6 +41,7 @@ export type GuitarWithComments = {
 
 export type GuitarReducerType = {
   guitars: GuitarWithComments[],
+  displayedGuitars: GuitarWithComments[],
   similarGuitars: Guitar[],
   cart: number,
 }
