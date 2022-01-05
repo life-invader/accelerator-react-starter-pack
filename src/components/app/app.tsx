@@ -11,9 +11,9 @@ function App(): JSX.Element {
       <Header />
       <Switch>
         <Route exact path='/'>
-          <Redirect to='/catalog' />
+          <Redirect to='/catalog/page_1' />
         </Route>
-        <Route exact path='/catalog'>
+        <Route exact path='/catalog/page_:page'>
           <CatalogPage />
         </Route>
         <Route exact path='/guitars/:id'>

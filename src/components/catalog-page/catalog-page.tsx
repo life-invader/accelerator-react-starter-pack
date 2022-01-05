@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { selectDisplayedGuitars, selectGuitarsByCurrentType, selectPriceRangePlaceholders } from '../../store/guitars/selectors';
 import { selectSortType, selectSortOrder, selectPriceRange, selectGuitarsStringsCount, selectGuitarTypes } from '../../store/filters/selectors';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from '../../store/filters/actions';
@@ -8,11 +8,14 @@ import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-action';
 import GuitarCard from '../guitar-card/guitar-card';
 import { SortOrder, SortType } from '../../constants/const';
 import { GuitarType, GuitarInfo, StringsCount } from '../../constants/guitars';
+import CatalogPagination from '../catalog-pagination/catalog-pagination';
+import { loadCurrentPage } from '../../store/pagination/actions';
 
 function CatalogPage(): JSX.Element {
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
+  const { page } = useParams<{ page: string }>();
 
   const [firstTimeLoad, setFirstTimeLoad] = useState(false);
 
@@ -57,6 +60,7 @@ function CatalogPage(): JSX.Element {
 
     if (evt.target.checked) {
       dispatch(loadGuitarTypes(guitarType));
+      dispatch(loadCurrentPage(1));
     } else {
       dispatch(removeGuitarTypes(guitarType));
     }
@@ -67,6 +71,7 @@ function CatalogPage(): JSX.Element {
 
     if (evt.target.checked) {
       dispatch(loadGuitarStringsCount(stringsCount));
+      dispatch(loadCurrentPage(1));
     } else {
       dispatch(removeGuitarStringsCount(stringsCount));
     }
@@ -149,11 +154,16 @@ function CatalogPage(): JSX.Element {
     }));
   };
 
+  // Эффект для разбора адресной строки и установки фильтров
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
     if (!searchParams.toString()) {
+      const currentPage = Number(page);
+
       setFirstTimeLoad(true);
+      dispatch(loadCurrentPage(currentPage));
+
       return;
     }
 
@@ -171,8 +181,9 @@ function CatalogPage(): JSX.Element {
     }
 
     setFirstTimeLoad(true);
-  }, []);
+  }, [page]);
 
+  // Эффект для запроса новых товаров при изменении фильтров
   useEffect(() => {
     if (!firstTimeLoad) {
       dispatch(fetchGuitars());
@@ -181,19 +192,19 @@ function CatalogPage(): JSX.Element {
 
     dispatch(fetchDisplayedGuitars());
 
-    const params = new URLSearchParams();
+    const searchParams = new URLSearchParams();
 
-    params.delete('type');
-    guitarTypes.forEach((type) => params.append('type', type));
+    searchParams.delete('type');
+    guitarTypes.forEach((type) => searchParams.append('type', type));
 
-    params.delete('stringCount');
-    guitarsStringsCount.forEach((stringCount) => params.append('stringCount', stringCount));
+    searchParams.delete('stringCount');
+    guitarsStringsCount.forEach((stringCount) => searchParams.append('stringCount', stringCount));
 
-    guitarsPriceRange.priceMin && params.set('price_gte', guitarsPriceRange.priceMin.toString());
-    guitarsPriceRange.priceMax && params.set('price_lte', guitarsPriceRange.priceMax.toString());
+    guitarsPriceRange.priceMin && searchParams.set('price_gte', guitarsPriceRange.priceMin.toString());
+    guitarsPriceRange.priceMax && searchParams.set('price_lte', guitarsPriceRange.priceMax.toString());
 
-    history.push(`${location.pathname}?${params.toString()}`);
-  }, [dispatch, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname, guitarsSortOrder, guitarsSortType, firstTimeLoad]);
+    history.push(`${location.pathname}?${searchParams.toString()}`);
+  }, [dispatch, page, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname, guitarsSortOrder, guitarsSortType, firstTimeLoad]);
 
   return (
     <main className='page-content'>
@@ -264,27 +275,13 @@ function CatalogPage(): JSX.Element {
           <div className='cards catalog__cards'>
 
             {
-              displayedGuitars &&
-              displayedGuitars.map((guitar) => <GuitarCard key={guitar.id} {...guitar} />)
+              (displayedGuitars && displayedGuitars.map((guitar) => <GuitarCard key={guitar.id} {...guitar} />)) || <div>Нет соединения с интернетом</div>
             }
 
           </div>
-          <div className='pagination page-content__pagination'>
-            <ul className='pagination__list'>
-              <li className='pagination__page pagination__page--active'>
-                <a className='link pagination__page-link' href='catalog/page_1'>1</a>
-              </li>
-              <li className='pagination__page'>
-                <a className='link pagination__page-link' href='catalog/page_1'>2</a>
-              </li>
-              <li className='pagination__page'>
-                <a className='link pagination__page-link' href='/catalog/page_1'>3</a>
-              </li>
-              <li className='pagination__page pagination__page--next' id='next'>
-                <a className='link pagination__page-link' href='3'>Далее</a>
-              </li>
-            </ul>
-          </div>
+
+          <CatalogPagination />
+
         </div>
       </div>
     </main>
