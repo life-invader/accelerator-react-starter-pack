@@ -1,7 +1,8 @@
 import { loadDisplayedGuitars, loadGuitars, loadSimilarGuitarsByName } from './guitars/actions';
-import { ThunkActionResult } from './type';
-import { ApiRoute, QueryParameters, EmbedParameters } from '../constants/const';
+import { ApiRoute } from '../constants/routes';
+import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../constants/query-parameters';
 import { loadTotalPages } from './pagination/actions';
+import { ThunkActionResult } from './type';
 
 export const fetchGuitars = (): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
   const apiParams = {
@@ -10,7 +11,7 @@ export const fetchGuitars = (): ThunkActionResult => async (dispatch, _getState,
     },
   };
 
-  const response = await api.get(ApiRoute.Guitars, apiParams);
+  const response = await api.get(ApiRoute.Guitars(), apiParams);
   dispatch(loadGuitars(response.data));
 };
 
@@ -24,22 +25,22 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
       [QueryParameters.Sort]: getState().filters.sortType || null,
       [QueryParameters.PriceGte]: getState().filters.guitarPriceRange.priceMin || null,
       [QueryParameters.PriceLte]: getState().filters.guitarPriceRange.priceMax || null,
-      _limit: 9,
-      _start: 9 * (getState().pagination.currentPage - 1),
+      _limit: ONE_PAGE_GUITAR_LIMIT,
+      _start: ONE_PAGE_GUITAR_LIMIT * (getState().pagination.currentPage - 1),
     },
   };
 
-  const response = await api.get(ApiRoute.Guitars, apiParams);
-  const totalGuitarPages = Math.round(response.headers['x-total-count'] / 9) || 1;
+  const response = await api.get(ApiRoute.Guitars(), apiParams);
+  const totalGuitarPages = Math.round(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || 1;
 
   dispatch(loadDisplayedGuitars(response.data));
   dispatch(loadTotalPages(totalGuitarPages));
 };
 
 export const fetchSimilarGuitarsByName = (guitarName: string): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
-  const response = await api.get(ApiRoute.Guitars, {
+  const response = await api.get(ApiRoute.Guitars(), {
     params: {
-      'name_like': guitarName,
+      [QueryParameters.Like]: guitarName,
     },
   });
 

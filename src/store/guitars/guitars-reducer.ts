@@ -1,6 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { Guitar, GuitarWithComments } from '../../types/guitar';
 import { loadDisplayedGuitars, loadGuitars, loadSimilarGuitarsByName } from './actions';
-import { GuitarReducerType } from '../type';
+
+export type GuitarReducerType = {
+  guitars: GuitarWithComments[],
+  displayedGuitars: GuitarWithComments[],
+  similarGuitars: Guitar[],
+  cart: number,
+}
 
 const initialState: GuitarReducerType = {
   guitars: [],

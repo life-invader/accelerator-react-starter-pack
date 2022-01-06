@@ -4,9 +4,10 @@ import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { selectDisplayedGuitars, selectGuitarsByCurrentType, selectPriceRangePlaceholders } from '../../store/guitars/selectors';
 import { selectSortType, selectSortOrder, selectPriceRange, selectGuitarsStringsCount, selectGuitarTypes } from '../../store/filters/selectors';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from '../../store/filters/actions';
-import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-action';
+import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-actions';
 import GuitarCard from '../guitar-card/guitar-card';
-import { SortOrder, SortType } from '../../constants/const';
+import { AppRoute } from '../../constants/routes';
+import { SortOrder, SortType } from '../../constants/query-parameters';
 import { GuitarType, GuitarInfo, StringsCount } from '../../constants/guitars';
 import CatalogPagination from '../catalog-pagination/catalog-pagination';
 import { loadCurrentPage } from '../../store/pagination/actions';
@@ -212,10 +213,10 @@ function CatalogPage(): JSX.Element {
         <h1 className='page-content__title title title--bigger'>Каталог гитар</h1>
         <ul className='breadcrumbs page-content__breadcrumbs'>
           <li className='breadcrumbs__item'>
-            <Link className='link' to='/'>Главная</Link>
+            <Link className='link' to={AppRoute.Main()}>Главная</Link>
           </li>
           <li className='breadcrumbs__item'>
-            <Link className='link' to='#'>Каталог</Link>
+            <Link className='link' to={AppRoute.Catalog(1)}>Каталог</Link>
           </li>
         </ul>
         <div className='catalog'>

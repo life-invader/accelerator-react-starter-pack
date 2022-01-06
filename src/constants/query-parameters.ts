@@ -1,6 +1,4 @@
-export const ApiRoute = {
-  Guitars: '/guitars',
-};
+export const ONE_PAGE_GUITAR_LIMIT = 9;
 
 export const QueryParameters = {
   Embed: '_embed',

@@ -1,9 +1,10 @@
 import { createAction } from '@reduxjs/toolkit';
+import { ActionType } from '../../constants/action-types';
 
-export const loadCurrentPage = createAction('Load-current-page', (currentPage: number) => ({
+export const loadCurrentPage = createAction(ActionType.LoadCurrentPage, (currentPage: number) => ({
   payload: currentPage,
 }));
 
-export const loadTotalPages = createAction('Load-total-pages', (totalpages: number) => ({
+export const loadTotalPages = createAction(ActionType.LoadTotalPages, (totalpages: number) => ({
   payload: totalpages,
 }));

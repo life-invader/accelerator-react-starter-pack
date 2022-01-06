@@ -1,8 +1,13 @@
+import { Link } from 'react-router-dom';
+import { AppRoute } from '../../constants/routes';
+
 function Footer() {
   return (
     <footer className="footer">
       <div className="footer__container container">
-        <a className="footer__logo logo"><img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" /></a>
+        <Link to={AppRoute.Main()} className="footer__logo logo">
+          <img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" />
+        </Link>
         <div className="socials footer__socials">
           <ul className="socials__list">
             <li className="socials-item">
@@ -35,15 +40,20 @@ function Footer() {
         <section className="footer__nav-section footer__nav-section--links">
           <h2 className="footer__nav-title">Информация</h2>
           <ul className="footer__nav-list">
-            <li className="footer__nav-list-item"><a className="link" href="#top">Где купить?</a>
+            <li className="footer__nav-list-item">
+              <a className="link" href="#top">Где купить?</a>
             </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Блог</a>
+            <li className="footer__nav-list-item">
+              <a className="link" href="#top">Блог</a>
             </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Вопрос - ответ</a>
+            <li className="footer__nav-list-item">
+              <a className="link" href="#top">Вопрос - ответ</a>
             </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Возврат</a>
+            <li className="footer__nav-list-item">
+              <a className="link" href="#top">Возврат</a>
             </li>
-            <li className="footer__nav-list-item"><a className="link" href="#top">Сервис-центры</a>
+            <li className="footer__nav-list-item">
+              <a className="link" href="#top">Сервис-центры</a>
             </li>
           </ul>
         </section>

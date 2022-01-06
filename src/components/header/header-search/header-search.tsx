@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { fetchSimilarGuitarsByName } from '../../../store/api-action';
+import { fetchSimilarGuitarsByName } from '../../../store/api-actions';
 import { selectSimilarGuitars } from '../../../store/guitars/selectors';
 
 function HeaderSearch() {
