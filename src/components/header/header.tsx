@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
 import { selectCart } from '../../store/guitars/selectors';
 import HeaderSearch from './header-search/header-search';
@@ -22,7 +21,7 @@ const NavLink = {
 
 function Header() {
   const cart = useSelector(selectCart);
-  const [currentLink, setCurrentLink] = useState(0);
+  const location = useLocation();
 
   return (
     <header className='header' id='header'>
@@ -35,8 +34,8 @@ function Header() {
 
             {
               Object.values(NavLink).map((link, index) => (
-                <li key={`${index + 1}_${link}`} onClick={() => setCurrentLink(index)}>
-                  <Link className={`link main-nav__link ${index === currentLink ? 'link--current' : ''}`} to={link.route}>{link.title}</Link>
+                <li key={`${index + 1}_${link}`}>
+                  <Link className={`link main-nav__link ${link.route === location.pathname ? 'link--current' : ''}`} to={link.route}>{link.title}</Link>
                 </li>
               ))
             }

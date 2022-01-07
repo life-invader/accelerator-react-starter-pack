@@ -4,6 +4,8 @@ import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../cons
 import { loadTotalPages } from './pagination/actions';
 import { ThunkActionResult } from './type';
 
+const TOTAL_CATALOG_PAGES_MIN = 1;
+
 export const fetchGuitars = (): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
   const apiParams = {
     params: {
@@ -31,10 +33,12 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
   };
 
   const response = await api.get(ApiRoute.Guitars(), apiParams);
-  const totalGuitarPages = Math.round(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || 1;
+
+  // Если после округления будет 0, то подставится 1, как минимально возможное кол-во страниц в каталоге
+  const totalCatalogPages = Math.round(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || TOTAL_CATALOG_PAGES_MIN;
 
   dispatch(loadDisplayedGuitars(response.data));
-  dispatch(loadTotalPages(totalGuitarPages));
+  dispatch(loadTotalPages(totalCatalogPages));
 };
 
 export const fetchSimilarGuitarsByName = (guitarName: string): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {

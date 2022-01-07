@@ -5,12 +5,13 @@ import { selectDisplayedGuitars, selectGuitarsByCurrentType, selectPriceRangePla
 import { selectSortType, selectSortOrder, selectPriceRange, selectGuitarsStringsCount, selectGuitarTypes } from '../../store/filters/selectors';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from '../../store/filters/actions';
 import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-actions';
-import GuitarCard from '../guitar-card/guitar-card';
 import { AppRoute } from '../../constants/routes';
 import { SortOrder, SortType } from '../../constants/query-parameters';
 import { GuitarType, GuitarInfo, StringsCount } from '../../constants/guitars';
 import CatalogPagination from '../catalog-pagination/catalog-pagination';
 import { loadCurrentPage } from '../../store/pagination/actions';
+import CatalogList from '../catalog-list/catalog-list';
+import LoadingError from '../loading-error/loading-error';
 
 function CatalogPage(): JSX.Element {
   const dispatch = useDispatch();
@@ -78,11 +79,20 @@ function CatalogPage(): JSX.Element {
     }
   };
 
-  const handlePriceRangeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMinPriceChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const price = Number(evt.target.value);
-    const priceFieldName = evt.target;
+    const priceFieldValue = evt.target;
 
-    if (evt.target.value === '' && priceFieldName.id === 'priceMin') {
+    if (priceFieldValue.value === '') {
+      dispatch(loadGuitarPriceRange({
+        priceMin: 0,
+      }));
+
+      return;
+    }
+
+    if (price < guitarPriceRangePlaceholders.priceMin) {
+      priceFieldValue.value = guitarPriceRangePlaceholders.priceMin.toString();
       dispatch(loadGuitarPriceRange({
         priceMin: guitarPriceRangePlaceholders.priceMin,
       }));
@@ -90,7 +100,43 @@ function CatalogPage(): JSX.Element {
       return;
     }
 
-    if (evt.target.value === '' && priceFieldName.id === 'priceMax') {
+    if (price > guitarsPriceRange.priceMax && guitarsPriceRange.priceMax) {
+      priceFieldValue.value = guitarsPriceRange.priceMax.toString();
+      dispatch(loadGuitarPriceRange({
+        priceMin: guitarsPriceRange.priceMax,
+      }));
+
+      return;
+    }
+
+    if (price > guitarPriceRangePlaceholders.priceMax) {
+      priceFieldValue.value = guitarPriceRangePlaceholders.priceMax.toString();
+      dispatch(loadGuitarPriceRange({
+        priceMin: guitarPriceRangePlaceholders.priceMax,
+      }));
+
+      return;
+    }
+
+    dispatch(loadGuitarPriceRange({
+      priceMin: price,
+    }));
+  };
+
+  const handleMaxPriceChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const price = Number(evt.target.value);
+    const priceFieldValue = evt.target;
+
+    if (priceFieldValue.value === '') {
+      dispatch(loadGuitarPriceRange({
+        priceMax: 0,
+      }));
+
+      return;
+    }
+
+    if (price > guitarPriceRangePlaceholders.priceMax) {
+      priceFieldValue.value = guitarPriceRangePlaceholders.priceMax.toString();
       dispatch(loadGuitarPriceRange({
         priceMax: guitarPriceRangePlaceholders.priceMax,
       }));
@@ -98,60 +144,26 @@ function CatalogPage(): JSX.Element {
       return;
     }
 
-    if (priceFieldName.id === 'priceMin' && price <= guitarPriceRangePlaceholders.priceMin) {
-      priceFieldName.value = guitarPriceRangePlaceholders.priceMin.toString();
+    if (price < guitarsPriceRange.priceMin && guitarsPriceRange.priceMin) {
+      priceFieldValue.value = guitarsPriceRange.priceMin.toString();
       dispatch(loadGuitarPriceRange({
-        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMin,
+        priceMax: guitarsPriceRange.priceMin,
       }));
+
       return;
     }
 
-    if (priceFieldName.id === 'priceMin' && price > guitarPriceRangePlaceholders.priceMax) {
-      priceFieldName.value = guitarPriceRangePlaceholders.priceMax.toString();
+    if (price < guitarPriceRangePlaceholders.priceMin) {
+      priceFieldValue.value = guitarPriceRangePlaceholders.priceMin.toString();
       dispatch(loadGuitarPriceRange({
-        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMax,
+        priceMax: guitarPriceRangePlaceholders.priceMin,
       }));
-      return;
-    }
 
-    if (priceFieldName.id === 'priceMax' && price >= guitarPriceRangePlaceholders.priceMax) {
-      priceFieldName.value = guitarPriceRangePlaceholders.priceMax.toString();
-      dispatch(loadGuitarPriceRange({
-        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMax,
-      }));
-      return;
-    }
-
-    if (priceFieldName.id === 'priceMax' && price < guitarPriceRangePlaceholders.priceMin) {
-      priceFieldName.value = guitarPriceRangePlaceholders.priceMin.toString();
-      dispatch(loadGuitarPriceRange({
-        [priceFieldName.id]: guitarPriceRangePlaceholders.priceMin,
-      }));
-      return;
-    }
-
-    if (priceFieldName.id === 'priceMin' && price > guitarsPriceRange.priceMax) {
-      priceFieldName.value = guitarsPriceRange.priceMax.toString();
-      dispatch(loadGuitarPriceRange({
-        [priceFieldName.id]: guitarsPriceRange.priceMax,
-      }));
-      return;
-    }
-
-    if (priceFieldName.id === 'priceMax' && price < guitarsPriceRange.priceMin) {
-      priceFieldName.value = guitarsPriceRange.priceMin.toString();
-      dispatch(loadGuitarPriceRange({
-        [priceFieldName.id]: guitarsPriceRange.priceMin,
-      }));
-      return;
-    }
-
-    if ((priceFieldName.id === 'priceMin' && price === guitarsPriceRange.priceMin) || (priceFieldName.id === 'priceMax' && price === guitarsPriceRange.priceMax)) {
       return;
     }
 
     dispatch(loadGuitarPriceRange({
-      [priceFieldName.id]: price,
+      priceMax: price,
     }));
   };
 
@@ -227,11 +239,11 @@ function CatalogPage(): JSX.Element {
               <div className='catalog-filter__price-range'>
                 <div className='form-input'>
                   <label className='visually-hidden'>Минимальная цена</label>
-                  <input type='number' placeholder={`${guitarPriceRangePlaceholders.priceMin}`} min={`${guitarsPriceRange.priceMin}`} id='priceMin' name='от' onBlur={handlePriceRangeChange} />
+                  <input type='number' placeholder={guitarPriceRangePlaceholders.priceMin.toString()} min={guitarsPriceRange.priceMin} id='priceMin' name='от' onBlur={handleMinPriceChange} />
                 </div>
                 <div className='form-input'>
                   <label className='visually-hidden'>Максимальная цена</label>
-                  <input type='number' placeholder={`${guitarPriceRangePlaceholders.priceMax}`} max={`${guitarPriceRangePlaceholders.priceMax}`} id='priceMax' name='до' onBlur={handlePriceRangeChange} />
+                  <input type='number' placeholder={guitarPriceRangePlaceholders.priceMax.toString()} max={guitarPriceRangePlaceholders.priceMax} id='priceMax' name='до' onBlur={handleMaxPriceChange} />
                 </div>
               </div>
             </fieldset>
@@ -273,13 +285,11 @@ function CatalogPage(): JSX.Element {
               <button className={`catalog-sort__order-button catalog-sort__order-button--down ${guitarsSortOrder === SortOrder.Descending ? 'catalog-sort__order-button--active' : ''}`} aria-label='По убыванию' data-order={SortOrder.Descending} onClick={handleSortOrderButtonClick} ></button>
             </div>
           </div>
-          <div className='cards catalog__cards'>
 
-            {
-              (displayedGuitars && displayedGuitars.map((guitar) => <GuitarCard key={guitar.id} {...guitar} />)) || <div>Нет соединения с интернетом</div>
-            }
-
-          </div>
+          {
+            (displayedGuitars.length > 0 && <CatalogList displayedGuitars={displayedGuitars} />) ||
+            <LoadingError />
+          }
 
           <CatalogPagination />
 
