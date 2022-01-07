@@ -1,21 +1,12 @@
-import { createReducer } from '@reduxjs/toolkit';
-import { loadGuitars, loadSimilarGuitarsByName } from './action';
-import { RootState } from './type';
+import { combineReducers } from 'redux';
+import { guitarsReducer } from './guitars/guitars-reducer';
+import { filtersReducer } from './filters/filters-reducer';
+import { paginationReducer } from './pagination/pagination-reducer';
 
-const initialState: RootState = {
-  guitars: [],
-  similarGuitars: [],
-  cart: 0,
-};
-
-export const rootReducer = createReducer(initialState, (builder) => {
-  builder
-    .addCase(loadGuitars, (state, action) => {
-      state.guitars = action.payload;
-    })
-    .addCase(loadSimilarGuitarsByName, (state, action) => {
-      state.similarGuitars = action.payload;
-    });
+export const rootReducer = combineReducers({
+  guitars: guitarsReducer,
+  filters: filtersReducer,
+  pagination: paginationReducer,
 });
 
-export type RootReducerType = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof rootReducer>;

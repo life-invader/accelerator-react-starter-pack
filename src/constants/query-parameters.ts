@@ -1,12 +1,14 @@
-export const ApiRoute = {
-  Guitars: '/guitars',
-};
+export const ONE_PAGE_GUITAR_LIMIT = 9;
 
 export const QueryParameters = {
   Embed: '_embed',
   Like: 'name_like',
   Sort: '_sort',
   Order: '_order',
+  Type: 'type',
+  StringCount: 'stringCount',
+  PriceGte: 'price_gte',
+  PriceLte: 'price_lte',
 } as const;
 
 export const SortType = {
