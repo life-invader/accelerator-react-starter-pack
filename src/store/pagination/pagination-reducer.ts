@@ -6,7 +6,7 @@ type PaginationReducerType = {
   totalPages: number,
 }
 
-const initialState: PaginationReducerType = {
+export const initialState: PaginationReducerType = {
   currentPage: 1,
   totalPages: 1,
 };

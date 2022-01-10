@@ -9,7 +9,7 @@ type FiltersReducerType = {
   sortType: string,
 }
 
-const initialState: FiltersReducerType = {
+export const initialState: FiltersReducerType = {
   guitarPriceRange: { priceMin: 0, priceMax: 0 },
   guitarTypes: [],
   guitarStringsCount: [],
