@@ -17,7 +17,7 @@ function CatalogPage(): JSX.Element {
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
-  const { page } = useParams<{ page: string }>();
+  const { page = 1 } = useParams<{ page: string }>();
 
   const [firstTimeLoad, setFirstTimeLoad] = useState(false);
 
@@ -239,11 +239,11 @@ function CatalogPage(): JSX.Element {
               <div className='catalog-filter__price-range'>
                 <div className='form-input'>
                   <label className='visually-hidden'>Минимальная цена</label>
-                  <input type='number' placeholder={guitarPriceRangePlaceholders.priceMin.toString()} min={guitarsPriceRange.priceMin} id='priceMin' name='от' onBlur={handleMinPriceChange} />
+                  <input type='number' data-testid='priceMin' placeholder={guitarPriceRangePlaceholders.priceMin.toString()} min={guitarsPriceRange.priceMin} id='priceMin' name='от' onBlur={handleMinPriceChange} />
                 </div>
                 <div className='form-input'>
                   <label className='visually-hidden'>Максимальная цена</label>
-                  <input type='number' placeholder={guitarPriceRangePlaceholders.priceMax.toString()} max={guitarPriceRangePlaceholders.priceMax} id='priceMax' name='до' onBlur={handleMaxPriceChange} />
+                  <input type='number' data-testid='priceMax' placeholder={guitarPriceRangePlaceholders.priceMax.toString()} max={guitarPriceRangePlaceholders.priceMax} id='priceMax' name='до' onBlur={handleMaxPriceChange} />
                 </div>
               </div>
             </fieldset>
