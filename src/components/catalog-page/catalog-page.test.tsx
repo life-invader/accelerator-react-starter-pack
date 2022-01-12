@@ -1,6 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { Router as BrowserRouter } from 'react-router-dom';
@@ -10,11 +8,8 @@ import { State } from '../../store/type';
 import { initialState as guitarInitialState } from '../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../store/pagination/pagination-reducer';
-import userEvent from '@testing-library/user-event';
-import { loadGuitarPriceRange } from '../../store/filters/actions';
 import { api } from '../../api/api';
 import { createMemoryHistory } from 'history';
-import { AppRoute } from '../../constants/routes';
 
 const history = createMemoryHistory();
 const mockStore = configureMockStore<State>([thunk.withExtraArgument(api)]);
