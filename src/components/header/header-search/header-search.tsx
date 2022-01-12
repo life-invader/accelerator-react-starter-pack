@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -30,7 +31,7 @@ function HeaderSearch() {
   };
 
   const handleOutsideFormClick = useCallback((evt) => {
-    if (!evt.path.includes(searchFormRef.current)) {
+    if (!evt.composedPath().includes(searchFormRef.current)) {
       handleFormBlur();
     }
   }, []);
@@ -82,7 +83,7 @@ function HeaderSearch() {
       </form>
       {
         (isOpened && similarGuitars) &&
-        <ul className='form-search__select-list' style={{ zIndex: '10' }} >
+        <ul className='form-search__select-list' style={{ zIndex: '10' }} data-testid='similar-guitars' >
           {
             similarGuitars.map(({ name, id }) => <li key={`${name}_${id}`} className='form-search__select-item' tabIndex={0} onClick={() => handleGuitarClick(id)} >{name}</li>)
           }

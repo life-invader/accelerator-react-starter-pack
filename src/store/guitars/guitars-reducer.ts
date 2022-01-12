@@ -9,7 +9,7 @@ export type GuitarReducerType = {
   cart: number,
 }
 
-const initialState: GuitarReducerType = {
+export const initialState: GuitarReducerType = {
   guitars: [],
   displayedGuitars: [],
   similarGuitars: [],

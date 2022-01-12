@@ -35,7 +35,7 @@ function Header() {
             {
               Object.values(NavLink).map((link, index) => (
                 <li key={`${index + 1}_${link}`}>
-                  <Link className={`link main-nav__link ${link.route === location.pathname ? 'link--current' : ''}`} to={link.route}>{link.title}</Link>
+                  <Link data-testid='main-nav-links' className={`link main-nav__link ${link.route === location.pathname ? 'link--current' : ''}`} to={link.route}>{link.title}</Link>
                 </li>
               ))
             }
