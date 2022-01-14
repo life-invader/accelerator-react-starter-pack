@@ -1,30 +1,30 @@
 import { createAction } from '@reduxjs/toolkit';
 import { ActionType } from '../../constants/action-types';
 
-export const loadGuitarPriceRange = createAction(ActionType.LoadPriceRange, (priceRange: { priceMin?: number, priceMax?: number }) => ({
+export const loadGuitarPriceRange = createAction(ActionType.LOAD_PRICE_RANGE, (priceRange: { priceMin?: number, priceMax?: number }) => ({
   payload: priceRange,
 }));
 
-export const loadGuitarTypes = createAction(ActionType.LoadGuitarTypes, (guitarTypes: string | string[]) => ({
+export const loadGuitarTypes = createAction(ActionType.LOAD_GUITAR_TYPES, (guitarTypes: string | string[]) => ({
   payload: guitarTypes,
 }));
 
-export const removeGuitarTypes = createAction(ActionType.RemoveGuitarTypes, (guitarTypes: string) => ({
+export const removeGuitarTypes = createAction(ActionType.REMOVE_GUITAR_TYPES, (guitarTypes: string) => ({
   payload: guitarTypes,
 }));
 
-export const loadGuitarStringsCount = createAction(ActionType.LoadGuitarStringsCount, (stringsCount: string | string[]) => ({
+export const loadGuitarStringsCount = createAction(ActionType.LOAD_GUITAR_STRINGS_COUNT, (stringsCount: string | string[]) => ({
   payload: stringsCount,
 }));
 
-export const removeGuitarStringsCount = createAction(ActionType.RemoveGuitarStringsCount, (stringsCount: string) => ({
+export const removeGuitarStringsCount = createAction(ActionType.REMOVE_GUITAR_STRINGS_COUNT, (stringsCount: string) => ({
   payload: stringsCount,
 }));
 
-export const loadSortType = createAction(ActionType.LoadSortType, (sortType: string) => ({
+export const loadSortType = createAction(ActionType.LOAD_SORT_TYPE, (sortType: string) => ({
   payload: sortType,
 }));
 
-export const loadSortOrder = createAction(ActionType.LoadSortOrder, (sortOrder: string) => ({
+export const loadSortOrder = createAction(ActionType.LOAD_SORT_ORDER, (sortOrder: string) => ({
   payload: sortOrder,
 }));

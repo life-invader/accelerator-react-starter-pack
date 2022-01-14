@@ -21,8 +21,8 @@ function GuitarCard({ price, name, previewImg, rating, comments, id }: GuitarWit
         </p>
       </div>
       <div className="product-card__buttons">
-        <Link className="button button--mini" to={AppRoute.Guitars(id)}>Подробнее</Link>
-        <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.Plug()}>Купить</Link>
+        <Link className="button button--mini" to={AppRoute.getGuitarsRoute(id)}>Подробнее</Link>
+        <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.getPlugRoute()}>Купить</Link>
       </div>
     </div>
   );

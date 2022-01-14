@@ -1,13 +1,13 @@
 export const ApiRoute = {
   Guitars: () => '/guitars',
-};
+} as const;
 
 export const AppRoute = {
-  Main: () => '/',
-  Catalog: (page: string | number = ':page') => `/catalog/page_${page}`,
-  Guitars: (id: string | number = ':page') => `/guitars/${id}`,
-  WhereToBuy: () => '/where-to-buy',
-  About: () => '/about',
-  Cart: () => '/cart',
-  Plug: () => '#',
-};
+  getMainRoute: () => '/',
+  getCatalogRoute: (page: string | number = ':page') => `/catalog/page_${page}`,
+  getGuitarsRoute: (id: string | number = ':page') => `/guitars/${id}`,
+  getWhereToBuyRoute: () => '/where-to-buy',
+  getAboutRoute: () => '/about',
+  getCartRoute: () => '/cart',
+  getPlugRoute: () => '#',
+} as const;

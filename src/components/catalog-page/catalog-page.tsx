@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
@@ -7,7 +9,7 @@ import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSort
 import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-actions';
 import { AppRoute } from '../../constants/routes';
 import { SortOrder, SortType } from '../../constants/query-parameters';
-import { GuitarType, GuitarInfo, StringsCount } from '../../constants/guitars';
+import { GuitarType, GuitarInfo, StringsCounts } from '../../constants/guitars';
 import CatalogPagination from '../catalog-pagination/catalog-pagination';
 import { loadCurrentPage } from '../../store/pagination/actions';
 import CatalogList from '../catalog-list/catalog-list';
@@ -169,6 +171,10 @@ function CatalogPage(): JSX.Element {
 
   // Эффект для разбора адресной строки и установки фильтров
   useEffect(() => {
+    if (firstTimeLoad) {
+      return;
+    }
+
     const searchParams = new URLSearchParams(location.search);
 
     if (!searchParams.toString()) {
@@ -194,12 +200,16 @@ function CatalogPage(): JSX.Element {
     }
 
     setFirstTimeLoad(true);
-  }, [page]);
+  }, [page, dispatch, location.search, firstTimeLoad]);
+
+  useEffect(() => {
+    dispatch(fetchGuitars());
+    setFirstTimeLoad(true);
+  }, [dispatch]);
 
   // Эффект для запроса новых товаров при изменении фильтров
   useEffect(() => {
     if (!firstTimeLoad) {
-      dispatch(fetchGuitars());
       return;
     }
 
@@ -216,8 +226,10 @@ function CatalogPage(): JSX.Element {
     guitarsPriceRange.priceMin && searchParams.set('price_gte', guitarsPriceRange.priceMin.toString());
     guitarsPriceRange.priceMax && searchParams.set('price_lte', guitarsPriceRange.priceMax.toString());
 
+    console.log(location.pathname);
     history.push(`${location.pathname}?${searchParams.toString()}`);
-  }, [dispatch, page, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname, guitarsSortOrder, guitarsSortType, firstTimeLoad]);
+  }, [dispatch, firstTimeLoad, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname]);
+
 
   return (
     <main className='page-content'>
@@ -225,10 +237,10 @@ function CatalogPage(): JSX.Element {
         <h1 className='page-content__title title title--bigger'>Каталог гитар</h1>
         <ul className='breadcrumbs page-content__breadcrumbs'>
           <li className='breadcrumbs__item'>
-            <Link className='link' to={AppRoute.Main()}>Главная</Link>
+            <Link className='link' to={AppRoute.getMainRoute()}>Главная</Link>
           </li>
           <li className='breadcrumbs__item'>
-            <Link className='link' to={AppRoute.Catalog(1)}>Каталог</Link>
+            <Link className='link' to={AppRoute.getCatalogRoute(1)}>Каталог</Link>
           </li>
         </ul>
         <div className='catalog'>
@@ -264,7 +276,7 @@ function CatalogPage(): JSX.Element {
               <legend className='catalog-filter__block-title'>Количество струн</legend>
 
               {
-                StringsCount.map((strings) => (
+                StringsCounts.map((strings) => (
                   <div key={strings.name} className='form-checkbox catalog-filter__block-item'>
                     <input className='visually-hidden' type='checkbox' id={strings.name} name={strings.name} data-strings={strings.count} checked={guitarsStringsCount.includes(strings.count.toString())} onChange={handleGuitarStringsCountChange} disabled={!guitarsByType.map((guitar) => guitar.stringCount).includes(strings.count)} />
                     <label htmlFor={strings.name}>{strings.count}</label>

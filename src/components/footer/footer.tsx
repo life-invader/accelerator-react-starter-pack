@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer__container container">
-        <Link to={AppRoute.Main()} className="footer__logo logo">
+        <Link to={AppRoute.getMainRoute()} className="footer__logo logo">
           <img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" />
         </Link>
         <div className="socials footer__socials">

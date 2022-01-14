@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { AppRoute } from '../../../constants/routes';
 import { fetchSimilarGuitarsByName } from '../../../store/api-actions';
 import { selectSimilarGuitars } from '../../../store/guitars/selectors';
 
@@ -13,7 +13,7 @@ function HeaderSearch() {
   const history = useHistory();
 
   const handleGuitarClick = (id: number | string) => {
-    history.push(`/guitars/${id}`);
+    history.push(AppRoute.getGuitarsRoute(id));
     handleFormBlur();
   };
 

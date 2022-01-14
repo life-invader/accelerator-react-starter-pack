@@ -59,7 +59,7 @@ describe('Async actions', () => {
       },
       filters: {
         ...filtersInitialState,
-        guitarStringsCount: ['2', '4'],
+        guitarStringsList: ['2', '4'],
         guitarTypes: ['ukulele'],
       },
     });

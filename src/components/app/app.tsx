@@ -13,13 +13,13 @@ function App(): JSX.Element {
     <>
       <Header />
       <Switch>
-        <Route exact path={AppRoute.Main()}>
-          <Redirect to={AppRoute.Catalog(CATALOG_FIRST_PAGE)} />
+        <Route exact path={AppRoute.getMainRoute()}>
+          <Redirect to={AppRoute.getCatalogRoute(CATALOG_FIRST_PAGE)} />
         </Route>
-        <Route exact path={AppRoute.Catalog()}>
+        <Route exact path={AppRoute.getCatalogRoute()}>
           <CatalogPage />
         </Route>
-        <Route exact path={AppRoute.Guitars()}>
+        <Route exact path={AppRoute.getGuitarsRoute()}>
           <Page404 />
         </Route>
         <Route>

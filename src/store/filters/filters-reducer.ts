@@ -4,7 +4,7 @@ import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSort
 type FiltersReducerType = {
   guitarPriceRange: { priceMin: number, priceMax: number },
   guitarTypes: string[],
-  guitarStringsCount: string[],
+  guitarStringsList: string[],
   sortOrder: string,
   sortType: string,
 }
@@ -12,7 +12,7 @@ type FiltersReducerType = {
 export const initialState: FiltersReducerType = {
   guitarPriceRange: { priceMin: 0, priceMax: 0 },
   guitarTypes: [],
-  guitarStringsCount: [],
+  guitarStringsList: [],
   sortOrder: '',
   sortType: '',
 };
@@ -34,13 +34,13 @@ export const filtersReducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadGuitarStringsCount, (state, action) => {
       if (Array.isArray(action.payload)) {
-        state.guitarStringsCount = action.payload;
+        state.guitarStringsList = action.payload;
         return;
       }
-      state.guitarStringsCount.push(action.payload);
+      state.guitarStringsList.push(action.payload);
     })
     .addCase(removeGuitarStringsCount, (state, action) => {
-      state.guitarStringsCount = state.guitarStringsCount.filter((count) => count !== action.payload);
+      state.guitarStringsList = state.guitarStringsList.filter((count) => count !== action.payload);
     })
     .addCase(loadSortOrder, (state, action) => {
       state.sortOrder = action.payload;

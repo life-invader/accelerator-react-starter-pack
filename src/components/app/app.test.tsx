@@ -28,7 +28,7 @@ store.dispatch = jest.fn();
 
 describe('Component: App', () => {
   it('should redirect to catalog when user navigate to "/"', () => {
-    history.push(AppRoute.Main());
+    history.push(AppRoute.getMainRoute());
 
     render(
       <Provider store={store}>
@@ -42,7 +42,7 @@ describe('Component: App', () => {
   });
 
   it('should render catalog when user navigate to "/catalog/page_1"', () => {
-    history.push(AppRoute.Catalog(1));
+    history.push(AppRoute.getCatalogRoute(1));
 
     render(
       <Provider store={store}>
@@ -55,8 +55,9 @@ describe('Component: App', () => {
     expect(screen.getByText('Каталог гитар')).toBeInTheDocument();
   });
 
-  it('should render 404 component when user navigate to unexisting route', () => {
-    history.push('dfsdf3');
+  it('should render 404 component when user navigate to non-existent route', () => {
+    const nonExistentRoute = 'some-non-existent-route';
+    history.push(nonExistentRoute);
 
     render(
       <Provider store={store}>

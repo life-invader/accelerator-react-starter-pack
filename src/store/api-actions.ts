@@ -21,7 +21,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
   const apiParams = {
     params: {
       [QueryParameters.Embed]: EmbedParameters.Comments,
-      [QueryParameters.StringCount]: getState().filters.guitarStringsCount,
+      [QueryParameters.StringCount]: getState().filters.guitarStringsList,
       [QueryParameters.Type]: getState().filters.guitarTypes,
       [QueryParameters.Order]: getState().filters.sortOrder || null,
       [QueryParameters.Sort]: getState().filters.sortType || null,

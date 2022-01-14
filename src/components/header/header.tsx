@@ -7,15 +7,15 @@ import HeaderSearch from './header-search/header-search';
 const NavLink = {
   Catalog: {
     title: 'Каталог',
-    route: AppRoute.Catalog(1),
+    route: AppRoute.getCatalogRoute(1),
   },
   WhereToBuy: {
     title: 'Где купить?',
-    route: AppRoute.WhereToBuy(),
+    route: AppRoute.getWhereToBuyRoute(),
   },
   About: {
     title: 'О компании',
-    route: AppRoute.About(),
+    route: AppRoute.getAboutRoute(),
   },
 };
 
@@ -26,7 +26,7 @@ function Header() {
   return (
     <header className='header' id='header'>
       <div className='container header__wrapper'>
-        <Link className='header__logo logo' to={AppRoute.Main()}>
+        <Link className='header__logo logo' to={AppRoute.getMainRoute()}>
           <img className='logo__img' width='70' height='70' src='/img/svg/logo.svg' alt='Логотип' />
         </Link>
         <nav className='main-nav'>
@@ -43,7 +43,7 @@ function Header() {
           </ul>
         </nav>
         <HeaderSearch />
-        <Link className='header__cart-link' to={AppRoute.Cart()} aria-label='Корзина'>
+        <Link className='header__cart-link' to={AppRoute.getCartRoute()} aria-label='Корзина'>
           <svg className='header__cart-icon' width='14' height='14' aria-hidden='true'>
             <use xlinkHref='#icon-basket'></use>
           </svg><span className='visually-hidden'>Перейти в корзину</span><span className='header__cart-count'>{cart}</span>
