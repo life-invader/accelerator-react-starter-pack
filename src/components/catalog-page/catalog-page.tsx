@@ -228,7 +228,7 @@ function CatalogPage(): JSX.Element {
 
     console.log(location.pathname);
     history.push(`${location.pathname}?${searchParams.toString()}`);
-  }, [dispatch, firstTimeLoad, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname]);
+  }, [dispatch, firstTimeLoad, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname, guitarsSortOrder, guitarsSortType]);
 
 
   return (
