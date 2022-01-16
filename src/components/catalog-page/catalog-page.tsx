@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-console */
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
@@ -226,7 +224,6 @@ function CatalogPage(): JSX.Element {
     guitarsPriceRange.priceMin && searchParams.set('price_gte', guitarsPriceRange.priceMin.toString());
     guitarsPriceRange.priceMax && searchParams.set('price_lte', guitarsPriceRange.priceMax.toString());
 
-    console.log(location.pathname);
     history.push(`${location.pathname}?${searchParams.toString()}`);
   }, [dispatch, firstTimeLoad, guitarTypes, guitarsPriceRange.priceMax, guitarsPriceRange.priceMin, guitarsStringsCount, history, location.pathname, guitarsSortOrder, guitarsSortType]);
 
