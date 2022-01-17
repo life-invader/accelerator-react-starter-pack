@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
-import { GuitarWithComments } from '../../types/guitar';
+import { IGuitarWithComments } from '../../types/guitar';
 import GuitarRating from '../guitar-rating/guitar-rating';
 
 const RATE_COUNT_PLUG = 0;
 
-function GuitarCard({ price, name, previewImg, rating, comments, id }: GuitarWithComments): JSX.Element {
+function GuitarCard({ price, name, previewImg, rating, comments, id }: IGuitarWithComments): JSX.Element {
   return (
     <div className="product-card">
       <img src={`/${previewImg}`} width="75" height="190" alt={name} />

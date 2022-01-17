@@ -9,7 +9,7 @@ export type GuitarComment = {
   guitarId: number
 }
 
-export type Guitar = {
+export interface IGuitar {
   id: number,
   name: string,
   vendorCode: string,
@@ -21,15 +21,6 @@ export type Guitar = {
   price: number
 }
 
-export type GuitarWithComments = {
-  id: number,
-  name: string,
-  vendorCode: string,
-  type: string,
-  description: string,
-  previewImg: string,
-  stringCount: number,
-  rating: number,
-  price: number,
+export interface IGuitarWithComments extends IGuitar {
   comments: GuitarComment[],
 }

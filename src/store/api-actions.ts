@@ -1,4 +1,4 @@
-import { loadDisplayedGuitars, loadGuitars, loadSimilarGuitarsByName } from './guitars/actions';
+import { loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadSimilarGuitarsByName } from './guitars/actions';
 import { ApiRoute } from '../constants/routes';
 import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../constants/query-parameters';
 import { loadTotalPages } from './pagination/actions';
@@ -32,13 +32,22 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
     },
   };
 
-  const response = await api.get(ApiRoute.Guitars(), apiParams);
+  try {
+    dispatch(loadFetchStatus(true));
 
-  // Если после округления будет 0, то подставится 1, как минимально возможное кол-во страниц в каталоге
-  const totalCatalogPages = Math.round(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || TOTAL_CATALOG_PAGES_MIN;
+    const response = await api.get(ApiRoute.Guitars(), apiParams);
 
-  dispatch(loadDisplayedGuitars(response.data));
-  dispatch(loadTotalPages(totalCatalogPages));
+    // Если после округления будет 0, то подставится 1, как минимально возможное кол-во страниц в каталоге
+    const totalCatalogPages = Math.ceil(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || TOTAL_CATALOG_PAGES_MIN;
+
+    dispatch(loadDisplayedGuitars(response.data));
+    dispatch(loadTotalPages(totalCatalogPages));
+
+    dispatch(loadFetchStatus(false));
+  } catch {
+    dispatch(loadFetchStatus(false));
+    dispatch(loadErrorStatus(true));
+  }
 };
 
 export const fetchSimilarGuitarsByName = (guitarName: string): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {

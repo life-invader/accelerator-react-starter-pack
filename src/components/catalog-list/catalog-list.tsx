@@ -1,8 +1,8 @@
-import { GuitarWithComments } from '../../types/guitar';
+import { IGuitarWithComments } from '../../types/guitar';
 import GuitarCard from '../guitar-card/guitar-card';
 
 type CatalogListType = {
-  displayedGuitars: GuitarWithComments[],
+  displayedGuitars: IGuitarWithComments[],
 }
 
 function CatalogList({ displayedGuitars }: CatalogListType) {
