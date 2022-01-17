@@ -1,16 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { AppRoute } from '../../../constants/routes';
 import { fetchSimilarGuitarsByName } from '../../../store/api-actions';
 import { selectSimilarGuitars } from '../../../store/guitars/selectors';
+import { sortBySimilarName } from '../../../utils';
 
 function HeaderSearch() {
-  const [isOpened, setIsOpened] = useState(false);
   const dispatch = useDispatch();
-  const similarGuitars = useSelector(selectSimilarGuitars);
-  const searchFormRef = useRef(null);
   const history = useHistory();
+
+  const similarGuitars = useSelector(selectSimilarGuitars);
+  const searchFormRef = useRef<HTMLInputElement>(null);
+
+  const [isOpened, setIsOpened] = useState(false);
+  const [searchName, setSearchName] = useState('');
 
   const handleGuitarClick = (id: number | string) => {
     history.push(AppRoute.getGuitarsRoute(id));
@@ -27,6 +31,7 @@ function HeaderSearch() {
       return;
     }
 
+    setSearchName(evt.target.value.trim());
     dispatch(fetchSimilarGuitarsByName(evt.target.value.trim()));
   };
 
@@ -70,6 +75,11 @@ function HeaderSearch() {
     return () => document.removeEventListener('click', handleOutsideFormClick);
   }, [handleOutsideFormClick]);
 
+  const sortedGuitars = useMemo(
+    () => (similarGuitars && sortBySimilarName(similarGuitars, searchName)),
+    [searchName, similarGuitars],
+  );
+
   return (
     <div className='form-search' ref={searchFormRef}>
       <form className='form-search__form' onSubmit={handleFormSubmit}>
@@ -85,7 +95,7 @@ function HeaderSearch() {
         (isOpened && similarGuitars) &&
         <ul className='form-search__select-list' style={{ zIndex: '10' }} data-testid='similar-guitars' >
           {
-            similarGuitars.map(({ name, id }) => <li key={`${name}_${id}`} className='form-search__select-item' tabIndex={0} onClick={() => handleGuitarClick(id)} >{name}</li>)
+            sortedGuitars.map(({ name, id }) => <li key={`${name}_${id}`} className='form-search__select-item' tabIndex={0} onClick={() => handleGuitarClick(id)} >{name}</li>)
           }
         </ul>
       }
