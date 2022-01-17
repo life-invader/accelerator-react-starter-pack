@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { selectDisplayedGuitars, selectErrorStatus, selectFetchStatus, selectGuitarsByCurrentType, selectPriceRangePlaceholders } from '../../store/guitars/selectors';
+import { selectDisplayedGuitars, selectErrorStatus, selectFetchStatus, selectAvailableStringsCount, selectPriceRangePlaceholders } from '../../store/guitars/selectors';
 import { selectSortType, selectSortOrder, selectPriceRange, selectGuitarsStringsCount, selectGuitarTypes } from '../../store/filters/selectors';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from '../../store/filters/actions';
 import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-actions';
@@ -28,7 +28,7 @@ function CatalogPage(): JSX.Element {
   const isError = useSelector(selectErrorStatus);
 
   const displayedGuitars = useSelector(selectDisplayedGuitars);
-  const guitarsByType = useSelector(selectGuitarsByCurrentType);
+  const availableStrings = useSelector(selectAvailableStringsCount);
   const guitarsSortOrder = useSelector(selectSortOrder);
   const guitarsSortType = useSelector(selectSortType);
   const guitarsPriceRange = useSelector(selectPriceRange);
@@ -87,6 +87,10 @@ function CatalogPage(): JSX.Element {
     const price = Number(evt.target.value);
     const priceFieldValue = evt.target;
 
+    if (Number(priceFieldValue.value) === guitarsPriceRange.priceMin) {
+      return;
+    }
+
     if (priceFieldValue.value === '') {
       dispatch(loadGuitarPriceRange({
         priceMin: 0,
@@ -130,6 +134,10 @@ function CatalogPage(): JSX.Element {
   const handleMaxPriceChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const price = Number(evt.target.value);
     const priceFieldValue = evt.target;
+
+    if (Number(priceFieldValue.value) === guitarsPriceRange.priceMax) {
+      return;
+    }
 
     if (priceFieldValue.value === '') {
       dispatch(loadGuitarPriceRange({
@@ -276,13 +284,13 @@ function CatalogPage(): JSX.Element {
               {
                 StringsCounts.map((strings) => {
                   const isChecked = guitarsStringsCount.includes(strings.count.toString());
-                  const isDisabled = !guitarsByType.map((guitar) => guitar.stringCount).includes(strings.count);
+                  const isDisabled = !availableStrings.includes(strings.count);
 
                   (isChecked && isDisabled) && dispatch(removeGuitarStringsCount(strings.count.toString()));
 
                   return (
                     <div key={strings.name} className='form-checkbox catalog-filter__block-item'>
-                      <input className='visually-hidden' type='checkbox' id={strings.name} name={strings.name} data-strings={strings.count} checked={isChecked} onChange={handleGuitarStringsCountChange} disabled={isDisabled} />
+                      <input className='visually-hidden' type='checkbox' id={strings.name} name={strings.name} data-strings={strings.count} checked={!isDisabled && isChecked} onChange={handleGuitarStringsCountChange} disabled={isDisabled} />
                       <label htmlFor={strings.name}>{strings.count}</label>
                     </div>
                   );

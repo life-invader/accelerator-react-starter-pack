@@ -1,3 +1,5 @@
+export const defaultStringsCounts = [4, 6, 7, 12];
+
 export const GuitarType = {
   Acoustic: 'acoustic',
   Electric: 'electric',

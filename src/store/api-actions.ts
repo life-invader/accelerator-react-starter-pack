@@ -38,7 +38,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
     const response = await api.get(ApiRoute.Guitars(), apiParams);
 
     // Если после округления будет 0, то подставится 1, как минимально возможное кол-во страниц в каталоге
-    const totalCatalogPages = Math.round(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || TOTAL_CATALOG_PAGES_MIN;
+    const totalCatalogPages = Math.ceil(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || TOTAL_CATALOG_PAGES_MIN;
 
     dispatch(loadDisplayedGuitars(response.data));
     dispatch(loadTotalPages(totalCatalogPages));
