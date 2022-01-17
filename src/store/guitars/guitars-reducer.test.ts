@@ -1,5 +1,5 @@
 import { initialState } from '../guitars/guitars-reducer';
-import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName } from './actions';
+import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName, loadFetchStatus, loadErrorStatus } from './actions';
 import { guitarsReducer } from './guitars-reducer';
 
 const mockGuitar = {
@@ -46,6 +46,22 @@ describe('Guitars reducer', () => {
       .toEqual({
         ...initialState,
         similarGuitars: [mockGuitar],
+      });
+  });
+
+  it('Load fetching status', () => {
+    expect(guitarsReducer(initialState, loadFetchStatus(true)))
+      .toEqual({
+        ...initialState,
+        isFetching: true,
+      });
+  });
+
+  it('Load error status', () => {
+    expect(guitarsReducer(initialState, loadErrorStatus(true)))
+      .toEqual({
+        ...initialState,
+        isError: true,
       });
   });
 });
