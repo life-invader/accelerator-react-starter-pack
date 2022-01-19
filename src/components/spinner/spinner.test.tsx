@@ -6,6 +6,6 @@ describe('Component: Spinner', () => {
   test('renders Spinner component', () => {
     render(<Spinner />);
 
-    expect(screen.queryByTestId('spinner')).toBeInTheDocument();
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 });

@@ -3,7 +3,7 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import thunk from 'redux-thunk';
 import { api } from '../api/api';
 import { ApiRoute } from '../constants/routes';
-import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName } from './guitars/actions';
+import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName, loadFetchStatus } from './guitars/actions';
 import { State } from './type';
 import { Action } from 'redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
@@ -63,6 +63,7 @@ describe('Async actions', () => {
         guitarTypes: ['ukulele'],
       },
     });
+
     const totalPages = 1;
     const xTotalCount = 9;
 
@@ -73,8 +74,10 @@ describe('Async actions', () => {
     await store.dispatch(fetchDisplayedGuitars());
 
     expect(store.getActions()).toEqual([
+      loadFetchStatus(true),
       loadDisplayedGuitars([mockGuitar]),
       loadTotalPages(totalPages),
+      loadFetchStatus(false),
     ]);
   });
 

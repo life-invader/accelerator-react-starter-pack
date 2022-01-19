@@ -3,12 +3,12 @@ import { loadCurrentPage, loadTotalPages } from './actions';
 
 type PaginationReducerType = {
   currentPage: number,
-  totalPages: number,
+  totalPages: number | null,
 }
 
 export const initialState: PaginationReducerType = {
   currentPage: 1,
-  totalPages: 1,
+  totalPages: null,
 };
 
 export const paginationReducer = createReducer(initialState, (builder) => {
