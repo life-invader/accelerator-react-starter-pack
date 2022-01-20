@@ -9,7 +9,7 @@ type SpecificationsTabType = {
 
 function SpecificationsTab({ vendorCode, stringCount, description, type }: SpecificationsTabType) {
   return (
-    <>
+    <div className="tabs__content" id="characteristics">
       <table className="tabs__table">
         <tr className="tabs__table-row">
           <td className="tabs__title">Артикул:</td>
@@ -25,7 +25,7 @@ function SpecificationsTab({ vendorCode, stringCount, description, type }: Speci
         </tr>
       </table>
       <p className="tabs__product-description hidden">{description}</p>
-    </>
+    </div>
   );
 }
 

@@ -1,22 +1,36 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { GuitarInfo } from '../../constants/guitars';
 import { AppRoute } from '../../constants/routes';
 import { fetchCurrentGuitar } from '../../store/api-actions';
 import { selectCurrentGuitar } from '../../store/guitars/selectors';
 import GuitarCommentList from '../guitar-comment-list/guitar-comment-list';
+import GuitarPageTabs from '../guitar-page-tabs/guitar-page-tabs';
+import Rating from '../rating/rating';
+
+const RATE_COUNT_PLUG = 0;
+
+const STAR_HEIGHT = '14';
+const STAR_WIDTH = '14';
+
 
 function GuitarPage() {
   const dispatch = useDispatch();
   const currentGuitar = useSelector(selectCurrentGuitar);
   const { id } = useParams<{ id: string }>();
 
+  const sortedComments = currentGuitar.comments?.slice().sort((commentA, commentB) => {
+    const dateA = new Date(commentA.createAt).getTime();
+    const dateB = new Date(commentB.createAt).getTime();
+
+    return dateB - dateA;
+  });
+
   useEffect(() => {
     dispatch(fetchCurrentGuitar(id));
   }, [dispatch, id]);
-
-  currentGuitar || <div>Грузим...</div>;
 
   return (
     <main className="page-content" id='#header'>
@@ -38,45 +52,19 @@ function GuitarPage() {
           <div className="product-container__info-wrapper">
             <h2 className="product-container__title title title--big title--uppercase">{currentGuitar.name}</h2>
             <div className="rate product-container__rating" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
-              <svg width="14" height="14" aria-hidden="true">
-                <use xlinkHref="#icon-full-star"></use>
-              </svg>
-              <svg width="14" height="14" aria-hidden="true">
-                <use xlinkHref="#icon-full-star"></use>
-              </svg>
-              <svg width="14" height="14" aria-hidden="true">
-                <use xlinkHref="#icon-full-star"></use>
-              </svg>
-              <svg width="14" height="14" aria-hidden="true">
-                <use xlinkHref="#icon-full-star"></use>
-              </svg>
-              <svg width="14" height="14" aria-hidden="true">
-                <use xlinkHref="#icon-star"></use>
-              </svg>
-              <span className="rate__count"></span>
+
+              {
+                <Rating rating={currentGuitar?.rating} starHeight={STAR_HEIGHT} starWidth={STAR_WIDTH} />
+              }
+
+              <span className="rate__count">{currentGuitar.comments?.length || RATE_COUNT_PLUG}</span>
               <span className="rate__message"></span>
             </div>
-            <div className="tabs">
-              <a className="button button--medium tabs__button" href="#characteristics">Характеристики</a>
-              <a className="button button--black-border button--medium tabs__button" href="#description">Описание</a>
-              <div className="tabs__content" id="characteristics">
-                <table className="tabs__table">
-                  <tr className="tabs__table-row">
-                    <td className="tabs__title">Артикул:</td>
-                    <td className="tabs__value">{currentGuitar.vendorCode}</td>
-                  </tr>
-                  <tr className="tabs__table-row">
-                    <td className="tabs__title">Тип:</td>
-                    <td className="tabs__value">{currentGuitar && GuitarInfo[currentGuitar.type]?.nameForOne}</td>
-                  </tr>
-                  <tr className="tabs__table-row">
-                    <td className="tabs__title">Количество струн:</td>
-                    <td className="tabs__value">{currentGuitar.stringCount} струнная</td>
-                  </tr>
-                </table>
-                <p className="tabs__product-description hidden">{currentGuitar.description}</p>
-              </div>
-            </div>
+
+            {
+              <GuitarPageTabs currentGuitar={currentGuitar} />
+            }
+
           </div>
           <div className="product-container__price-wrapper">
             <p className="product-container__price-info product-container__price-info--title">Цена:</p>
@@ -88,7 +76,7 @@ function GuitarPage() {
           <h3 className="reviews__title title title--bigger">Отзывы</h3>
           <Link className="button button--red-border button--big reviews__sumbit-button" to={AppRoute.getPlugRoute()}>Оставить отзыв</Link>
 
-          <GuitarCommentList comments={currentGuitar.comments} />
+          <GuitarCommentList comments={sortedComments} />
 
           {
             currentGuitar.comments?.length > 0 &&

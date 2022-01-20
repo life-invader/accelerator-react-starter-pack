@@ -1,4 +1,8 @@
-import { IGuitar, IGuitarWithComments } from './types/guitar';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+import { IGuitar, IGuitarWithComments } from '../types/guitar';
+
+dayjs.locale('ru');
 
 export const sortBySimilarName = (guitars: IGuitar[], similarName: string): IGuitar[] =>
   guitars.slice().sort(sortBySimilarNameCallback(similarName.toLocaleLowerCase()));
@@ -33,3 +37,5 @@ export const createMockGuitar = (): IGuitarWithComments => ({
     guitarId: 1,
   }],
 });
+
+export const formatCommentDate = (date: string) => dayjs(date).format('D MMMM');

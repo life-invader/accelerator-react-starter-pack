@@ -11,7 +11,7 @@ import { fetchGuitars, fetchDisplayedGuitars, fetchSimilarGuitarsByName } from '
 import { loadTotalPages } from './pagination/actions';
 import { initialState as filtersInitialState } from './filters/filters-reducer';
 import { initialState as paginationInitialState } from './pagination/pagination-reducer';
-import { createMockGuitar } from '../utils';
+import { createMockGuitar } from '../utils/common';
 
 const mockGuitar = createMockGuitar();
 

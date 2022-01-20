@@ -1,4 +1,4 @@
-import { createMockGuitar } from '../../utils';
+import { createMockGuitar } from '../../utils/common';
 import { initialState } from '../guitars/guitars-reducer';
 import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName, loadFetchStatus, loadErrorStatus } from './actions';
 import { guitarsReducer } from './guitars-reducer';

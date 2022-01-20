@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { createMockGuitar } from '../../utils';
+import { createMockGuitar } from '../../utils/common';
 import CatalogList from './catalog-list';
 
 const mockGuitar = createMockGuitar();

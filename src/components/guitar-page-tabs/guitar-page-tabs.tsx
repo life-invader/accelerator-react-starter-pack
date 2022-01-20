@@ -1,42 +1,54 @@
-import { useState } from 'react';
-import { GuitarInfo } from '../../constants/guitars';
+import React, { useState } from 'react';
 import { AppRoute } from '../../constants/routes';
 import { IGuitarWithComments } from '../../types/guitar';
+import DescriptionTab from './description-tab/description-tab';
+import SpecificationsTab from './specifications-tab/specifications-tab';
 
 type GuitarPageTabsType = {
   currentGuitar: IGuitarWithComments,
 }
 
 const Tabs = {
-  Specifications: 'Характеристики',
-  Description: 'Описание',
+  Specifications: {
+    name: 'Характеристики',
+    title: 'specs',
+  },
+  Description: {
+    name: 'Описание',
+    title: 'desc',
+  },
 };
 
 function GuitarPageTabs({ currentGuitar }: GuitarPageTabsType) {
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState<string>(Tabs.Specifications.title);
+
+  const TabComponent = {
+    [Tabs.Specifications.title]: <SpecificationsTab vendorCode={currentGuitar.vendorCode} stringCount={currentGuitar.stringCount} description={currentGuitar.description} type={currentGuitar.type} />,
+    [Tabs.Description.title]: <DescriptionTab description={currentGuitar.description} />,
+  };
 
   return (
     <div className="tabs">
       {
-        Object.values(Tabs).map((tab, index) => <a key={`${tab + index}`} className={`button button--medium tabs__button ${currentTab === index ? '' : 'button--black-border'}`} href={AppRoute.getPlugRoute()} onClick={() => setCurrentTab(index)}>{tab}</a>)
+        Object.values(Tabs).map(({ name, title }, index) => (
+          <a
+            key={`${name + index}`}
+            data-activetab={title}
+            className={`button button--medium tabs__button ${currentTab === title ? '' : 'button--black-border'}`}
+            href={AppRoute.getPlugRoute()}
+            onClick={(evt: React.MouseEvent<HTMLAnchorElement>) => {
+              evt.preventDefault();
+              setCurrentTab(title);
+            }}
+          >{name}
+          </a>
+        ))
       }
-      <div className="tabs__content" id="characteristics">
-        <table className="tabs__table">
-          <tr className="tabs__table-row">
-            <td className="tabs__title">Артикул:</td>
-            <td className="tabs__value">{currentGuitar.vendorCode}</td>
-          </tr>
-          <tr className="tabs__table-row">
-            <td className="tabs__title">Тип:</td>
-            <td className="tabs__value">{currentGuitar && GuitarInfo[currentGuitar.type]?.nameForOne}</td>
-          </tr>
-          <tr className="tabs__table-row">
-            <td className="tabs__title">Количество струн:</td>
-            <td className="tabs__value">{currentGuitar.stringCount} струнная</td>
-          </tr>
-        </table>
-        <p className="tabs__product-description hidden">{currentGuitar.description}</p>
-      </div>
+
+      {
+        TabComponent[currentTab]
+      }
+
     </div>
   );
 }

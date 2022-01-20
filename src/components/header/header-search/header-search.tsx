@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { AppRoute } from '../../../constants/routes';
 import { fetchSimilarGuitarsByName } from '../../../store/api-actions';
 import { selectSimilarGuitars } from '../../../store/guitars/selectors';
-import { sortBySimilarName } from '../../../utils';
+import { sortBySimilarName } from '../../../utils/common';
 
 function HeaderSearch() {
   const dispatch = useDispatch();
