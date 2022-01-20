@@ -11,28 +11,9 @@ import { fetchGuitars, fetchDisplayedGuitars, fetchSimilarGuitarsByName } from '
 import { loadTotalPages } from './pagination/actions';
 import { initialState as filtersInitialState } from './filters/filters-reducer';
 import { initialState as paginationInitialState } from './pagination/pagination-reducer';
+import { createMockGuitar } from '../utils';
 
-const mockGuitar = {
-  id: 1,
-  name: 'guitar name',
-  vendorCode: '123',
-  type: 'guitar type',
-  description: 'description',
-  previewImg: 'img_src',
-  stringCount: 4,
-  rating: 10,
-  price: 999999,
-  comments: [{
-    id: '1',
-    userName: 'user_name',
-    advantages: 'advantages',
-    disadvantages: 'disadvantages',
-    comment: 'comment',
-    rating: 10,
-    createAt: 'create_at',
-    guitarId: 1,
-  }],
-};
+const mockGuitar = createMockGuitar();
 
 describe('Async actions', () => {
   const mockApi = new AxiosMockAdapter(api);

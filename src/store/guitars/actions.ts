@@ -6,6 +6,10 @@ export const loadGuitars = createAction(ActionType.LOAD_GUITARS, (guitars: IGuit
   payload: guitars,
 }));
 
+export const loadCurrentGuitar = createAction(ActionType.LOAD_CURRENT_GUITAR, (currentGuitar: IGuitarWithComments) => ({
+  payload: currentGuitar,
+}));
+
 export const loadFetchStatus = createAction(ActionType.LOAD_FETCH_STATUS, (fetchStatus: boolean) => ({
   payload: fetchStatus,
 }));

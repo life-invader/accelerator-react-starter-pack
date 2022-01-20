@@ -4,6 +4,7 @@ import { RootState } from '../root-reducer';
 
 export const selectAllGuitars = (state: RootState) => state.guitars.guitars;
 export const selectDisplayedGuitars = (state: RootState) => state.guitars.displayedGuitars;
+export const selectCurrentGuitar = (state: RootState) => state.guitars.currentGuitar;
 export const selectSimilarGuitars = (state: RootState) => state.guitars.similarGuitars;
 export const selectFetchStatus = (state: RootState) => state.guitars.isFetching;
 export const selectErrorStatus = (state: RootState) => state.guitars.isError;

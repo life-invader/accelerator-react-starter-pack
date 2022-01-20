@@ -5,6 +5,7 @@ import Header from '../header/header';
 import Footer from '../footer/footer';
 import Page404 from '../page-404/page-404';
 import { AppRoute } from '../../constants/routes';
+import GuitarPage from '../guitar-page/guitar-page';
 
 const CATALOG_FIRST_PAGE = 1;
 
@@ -20,7 +21,7 @@ function App(): JSX.Element {
           <CatalogPage />
         </Route>
         <Route exact path={AppRoute.getGuitarsRoute()}>
-          <Page404 />
+          <GuitarPage />
         </Route>
         <Route>
           <Page404 />

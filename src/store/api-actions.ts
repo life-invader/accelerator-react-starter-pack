@@ -1,4 +1,4 @@
-import { loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadSimilarGuitarsByName } from './guitars/actions';
+import { loadCurrentGuitar, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadSimilarGuitarsByName } from './guitars/actions';
 import { ApiRoute } from '../constants/routes';
 import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../constants/query-parameters';
 import { loadTotalPages } from './pagination/actions';
@@ -58,5 +58,15 @@ export const fetchSimilarGuitarsByName = (guitarName: string): ThunkActionResult
   });
 
   dispatch(loadSimilarGuitarsByName(response.data));
+};
+
+export const fetchCurrentGuitar = (id: string | number): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
+  const response = await api.get(ApiRoute.Guitars(id), {
+    params: {
+      [QueryParameters.Embed]: EmbedParameters.Comments,
+    },
+  });
+
+  dispatch(loadCurrentGuitar(response.data));
 };
 

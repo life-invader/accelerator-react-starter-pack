@@ -1,12 +1,12 @@
-export type GuitarComment = {
+export type GuitarCommentType = {
   id: string,
   userName: string,
-  advantages: string,
-  disadvantages: string,
+  advantage: string,
+  disadvantage: string,
   comment: string,
   rating: number,
   createAt: string,
-  guitarId: number
+  guitarId: number,
 }
 
 export interface IGuitar {
@@ -22,5 +22,5 @@ export interface IGuitar {
 }
 
 export interface IGuitarWithComments extends IGuitar {
-  comments: GuitarComment[],
+  comments: GuitarCommentType[],
 }

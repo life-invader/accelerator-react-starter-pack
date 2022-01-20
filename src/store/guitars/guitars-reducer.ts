@@ -1,9 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { IGuitar, IGuitarWithComments } from '../../types/guitar';
-import { loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadSimilarGuitarsByName } from './actions';
+import { loadCurrentGuitar, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadSimilarGuitarsByName } from './actions';
 
 export type GuitarReducerType = {
   guitars: IGuitarWithComments[],
+  currentGuitar: IGuitarWithComments,
   displayedGuitars: IGuitarWithComments[],
   similarGuitars: IGuitar[],
   isFetching: boolean,
@@ -13,6 +14,7 @@ export type GuitarReducerType = {
 
 export const initialState: GuitarReducerType = {
   guitars: [],
+  currentGuitar: {} as IGuitarWithComments,
   displayedGuitars: [],
   similarGuitars: [],
   isFetching: false,
@@ -24,6 +26,9 @@ export const guitarsReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(loadGuitars, (state, action) => {
       state.guitars = action.payload;
+    })
+    .addCase(loadCurrentGuitar, (state, action) => {
+      state.currentGuitar = action.payload;
     })
     .addCase(loadDisplayedGuitars, (state, action) => {
       state.displayedGuitars = action.payload;

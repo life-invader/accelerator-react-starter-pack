@@ -30,8 +30,8 @@ const store = mockStore({
         comments: [{
           id: '1',
           userName: 'user_name',
-          advantages: 'advantages',
-          disadvantages: 'disadvantages',
+          advantage: 'advantages',
+          disadvantage: 'disadvantages',
           comment: 'comment',
           rating: 10,
           createAt: 'create_at',
@@ -51,8 +51,8 @@ const store = mockStore({
         comments: [{
           id: '1',
           userName: 'user_name',
-          advantages: 'advantages',
-          disadvantages: 'disadvantages',
+          advantage: 'advantages',
+          disadvantage: 'disadvantages',
           comment: 'comment',
           rating: 10,
           createAt: 'create_at',
@@ -63,7 +63,6 @@ const store = mockStore({
   },
   filters: {
     ...filtersInitialState,
-    // guitarPriceRange: { priceMin: 1800, priceMax: 35000 },
   },
   pagination: {
     ...paginationInitialState,

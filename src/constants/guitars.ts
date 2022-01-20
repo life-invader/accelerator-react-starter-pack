@@ -4,22 +4,25 @@ export const GuitarType = {
   Acoustic: 'acoustic',
   Electric: 'electric',
   Ukulele: 'ukulele',
-} as const;
+};
 
 export const GuitarInfo = {
   [GuitarType.Acoustic]: {
     name: 'Акустические гитары',
+    nameForOne: 'Акустическая гитара',
     id: 'acoustic',
   },
   [GuitarType.Electric]: {
     name: 'Электрогитары',
+    nameForOne: 'Электрогитара',
     id: 'electric',
   },
   [GuitarType.Ukulele]: {
     name: 'Укулеле',
+    nameForOne: 'Укулеле',
     id: 'ukulele',
   },
-} as const;
+};
 
 export const StringsCounts = [
   {

@@ -7,6 +7,7 @@ export const ActionType = {
   LOAD_SORT_TYPE: 'filters/LoadSortType',
   LOAD_SORT_ORDER: 'filters/LoadSortOrder',
   LOAD_GUITARS: 'guitars/LoadGuitars',
+  LOAD_CURRENT_GUITAR: 'guitars/LoadCurrentGuitar',
   LOAD_SIMILAR_GUITARS: 'guitars/LoadSimilarGuitars',
   LOAD_DISPLAYED_GUITARS: 'guitars/LoadDisplayedGuitars',
   LOAD_CURRENT_PAGE: 'pagination/LoadCurrentPage',
