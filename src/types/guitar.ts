@@ -9,6 +9,15 @@ export type GuitarCommentType = {
   guitarId: number,
 }
 
+export type GuitarCommentPostType = {
+  userName: string,
+  advantage: string,
+  disadvantage: string,
+  comment: string,
+  rating: number,
+  guitarId: number,
+}
+
 export interface IGuitar {
   id: number,
   name: string,

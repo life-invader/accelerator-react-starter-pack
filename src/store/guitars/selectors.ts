@@ -9,6 +9,7 @@ export const selectSimilarGuitars = (state: RootState) => state.guitars.similarG
 export const selectFetchStatus = (state: RootState) => state.guitars.isFetching;
 export const selectErrorStatus = (state: RootState) => state.guitars.isError;
 export const selectCart = (state: RootState) => state.guitars.cart;
+export const selectNewCommentStatus = (state: RootState) => state.guitars.isNewCommentSuccess;
 
 export const selectPriceRangePlaceholders = createSelector(selectAllGuitars, (state) => state, (guitars, _state) => {
   if (!guitars.length) { return { priceMin: 0, priceMax: 0 }; }

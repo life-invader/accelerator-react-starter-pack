@@ -1,9 +1,17 @@
 import { createAction } from '@reduxjs/toolkit';
 import { ActionType } from '../../constants/action-types';
-import { IGuitarWithComments } from '../../types/guitar';
+import { GuitarCommentType, IGuitarWithComments } from '../../types/guitar';
 
 export const loadGuitars = createAction(ActionType.LOAD_GUITARS, (guitars: IGuitarWithComments[]) => ({
   payload: guitars,
+}));
+
+export const loadNewComment = createAction(ActionType.LOAD_NEW_COMMENT, (newComment: GuitarCommentType) => ({
+  payload: newComment,
+}));
+
+export const loadNewCommentSuccessStatus = createAction(ActionType.LOAD_NEW_COMMENT_STATUS, (status: boolean | null) => ({
+  payload: status,
 }));
 
 export const loadCurrentGuitar = createAction(ActionType.LOAD_CURRENT_GUITAR, (currentGuitar: IGuitarWithComments) => ({

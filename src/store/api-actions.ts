@@ -1,8 +1,10 @@
-import { loadCurrentGuitar, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadSimilarGuitarsByName } from './guitars/actions';
+import { loadCurrentGuitar, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadNewComment, loadNewCommentSuccessStatus, loadSimilarGuitarsByName } from './guitars/actions';
 import { ApiRoute } from '../constants/routes';
 import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../constants/query-parameters';
 import { loadTotalPages } from './pagination/actions';
 import { ThunkActionResult } from './type';
+import { GuitarCommentPostType, GuitarCommentType } from '../types/guitar';
+import { toast } from 'react-toastify';
 
 const TOTAL_CATALOG_PAGES_MIN = 1;
 
@@ -68,5 +70,20 @@ export const fetchCurrentGuitar = (id: string | number): ThunkActionResult => as
   });
 
   dispatch(loadCurrentGuitar(response.data));
+};
+
+export const sendNewComment = (newComment: GuitarCommentPostType): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
+  try {
+    dispatch(loadNewCommentSuccessStatus(null));
+
+    const { data: newPostedComment } = await api.post(ApiRoute.Comments(), newComment);
+
+    dispatch(loadNewCommentSuccessStatus(true));
+    dispatch(loadNewComment(newPostedComment as GuitarCommentType));
+  }
+  catch {
+    dispatch(loadNewCommentSuccessStatus(false));
+    toast.error('Не удалось отправить комментарий', { position: toast.POSITION.TOP_LEFT, hideProgressBar: false, autoClose: 5000, closeOnClick: true });
+  }
 };
 

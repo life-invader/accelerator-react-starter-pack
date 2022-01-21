@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { IGuitar, IGuitarWithComments } from '../../types/guitar';
-import { loadCurrentGuitar, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadSimilarGuitarsByName } from './actions';
+import { loadCurrentGuitar, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadNewComment, loadNewCommentSuccessStatus, loadSimilarGuitarsByName } from './actions';
 
 export type GuitarReducerType = {
   guitars: IGuitarWithComments[],
@@ -9,6 +9,7 @@ export type GuitarReducerType = {
   similarGuitars: IGuitar[],
   isFetching: boolean,
   isError: boolean,
+  isNewCommentSuccess: boolean | null,
   cart: number,
 }
 
@@ -19,6 +20,7 @@ export const initialState: GuitarReducerType = {
   similarGuitars: [],
   isFetching: false,
   isError: false,
+  isNewCommentSuccess: null,
   cart: 0,
 };
 
@@ -41,5 +43,11 @@ export const guitarsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadErrorStatus, (state, action) => {
       state.isError = action.payload;
+    })
+    .addCase(loadNewCommentSuccessStatus, (state, action) => {
+      state.isNewCommentSuccess = action.payload;
+    })
+    .addCase(loadNewComment, (state, action) => {
+      state.currentGuitar?.comments?.push(action.payload);
     });
 });

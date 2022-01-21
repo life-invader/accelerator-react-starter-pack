@@ -1,5 +1,6 @@
 export const ApiRoute = {
   Guitars: (id?: string | number) => `/guitars${id ? `/${id}` : ''}`,
+  Comments: () => '/comments',
 } as const;
 
 export const AppRoute = {
