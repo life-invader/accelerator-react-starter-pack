@@ -16,4 +16,6 @@ export const ActionType = {
   LOAD_FETCH_STATUS: 'pagination/LoadFetchStatus',
   LOAD_NEW_COMMENT_STATUS: 'guitars/LoadNewCommentStatus',
   LOAD_NEW_COMMENT: 'guitars/LoadNewComment',
+  LOAD_CURRENT_GUITAR_FETCH_STATUS: 'guitars/LoadCurrentGuitarFetchStatus',
+  LOAD_CURRENT_GUITAR_ERROR_STATUS: 'guitars/LoadCurrentGuitarErrorStatus',
 } as const;

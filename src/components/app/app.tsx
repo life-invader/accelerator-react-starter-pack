@@ -1,21 +1,17 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import CatalogPage from '../catalog-page/catalog-page';
-import Header from '../header/header';
-import Footer from '../footer/footer';
 import Page404 from '../page-404/page-404';
 import { AppRoute } from '../../constants/routes';
 import GuitarPage from '../guitar-page/guitar-page';
-
-const CATALOG_FIRST_PAGE = 1;
+import AppLayout from '../app-layout/app-layout';
 
 function App(): JSX.Element {
   return (
-    <>
-      <Header />
+    <AppLayout>
       <Switch>
         <Route exact path={AppRoute.getMainRoute()}>
-          <Redirect to={AppRoute.getCatalogRoute(CATALOG_FIRST_PAGE)} />
+          <Redirect to={AppRoute.getCatalogRoute(true)} />
         </Route>
         <Route exact path={AppRoute.getCatalogRoute()}>
           <CatalogPage />
@@ -27,8 +23,7 @@ function App(): JSX.Element {
           <Page404 />
         </Route>
       </Switch>
-      <Footer />
-    </>
+    </AppLayout>
   );
 }
 

@@ -1,10 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { IGuitar, IGuitarWithComments } from '../../types/guitar';
-import { loadCurrentGuitar, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadNewComment, loadNewCommentSuccessStatus, loadSimilarGuitarsByName } from './actions';
+import { loadCurrentGuitar, loadCurrentGuitarErrorStatus, loadCurrentGuitarFetchStatus, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadNewComment, loadNewCommentSuccessStatus, loadSimilarGuitarsByName } from './actions';
 
 export type GuitarReducerType = {
   guitars: IGuitarWithComments[],
   currentGuitar: IGuitarWithComments,
+  isCurrentGuitarFetching: boolean,
+  isCurrentGuitarError: boolean,
   displayedGuitars: IGuitarWithComments[],
   similarGuitars: IGuitar[],
   isFetching: boolean,
@@ -16,6 +18,8 @@ export type GuitarReducerType = {
 export const initialState: GuitarReducerType = {
   guitars: [],
   currentGuitar: {} as IGuitarWithComments,
+  isCurrentGuitarFetching: false,
+  isCurrentGuitarError: false,
   displayedGuitars: [],
   similarGuitars: [],
   isFetching: false,
@@ -49,5 +53,11 @@ export const guitarsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadNewComment, (state, action) => {
       state.currentGuitar?.comments?.push(action.payload);
+    })
+    .addCase(loadCurrentGuitarFetchStatus, (state, action) => {
+      state.isCurrentGuitarFetching =  action.payload;
+    })
+    .addCase(loadCurrentGuitarErrorStatus, (state, action) => {
+      state.isCurrentGuitarError =  action.payload;
     });
 });

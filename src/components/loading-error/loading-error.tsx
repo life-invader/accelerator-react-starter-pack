@@ -1,7 +1,9 @@
+import styles from './loading-error.module.css';
+
 function LoadingError() {
   return (
-    <div style={{ width: '100%', textAlign: 'center', height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p>Нет соединения с интернетом</p>
+    <div className={styles.LoadingError} >
+      <p>Не удалось загрузить</p>
     </div>
   );
 }

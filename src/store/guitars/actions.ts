@@ -14,6 +14,14 @@ export const loadNewCommentSuccessStatus = createAction(ActionType.LOAD_NEW_COMM
   payload: status,
 }));
 
+export const loadCurrentGuitarFetchStatus = createAction(ActionType.LOAD_CURRENT_GUITAR_FETCH_STATUS, (status: boolean) => ({
+  payload: status,
+}));
+
+export const loadCurrentGuitarErrorStatus = createAction(ActionType.LOAD_CURRENT_GUITAR_ERROR_STATUS, (status: boolean) => ({
+  payload: status,
+}));
+
 export const loadCurrentGuitar = createAction(ActionType.LOAD_CURRENT_GUITAR, (currentGuitar: IGuitarWithComments) => ({
   payload: currentGuitar,
 }));
