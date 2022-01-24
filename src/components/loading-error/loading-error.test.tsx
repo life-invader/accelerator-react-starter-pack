@@ -7,6 +7,6 @@ describe('Component: LoadingError', () => {
       <LoadingError />,
     );
 
-    expect(screen.getByText('Нет соединения с интернетом')).toBeInTheDocument();
+    expect(screen.getByText('Не удалось загрузить')).toBeInTheDocument();
   });
 });

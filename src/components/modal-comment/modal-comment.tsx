@@ -20,6 +20,7 @@ const newPostCommentTemplate: GuitarCommentPostType = {
 
 function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentType) {
   const dispatch = useDispatch();
+  const firstFocusElementRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [formFieldError, setFormFieldError] = useState<{ [key in keyof GuitarCommentPostType]: boolean }>({
@@ -37,10 +38,10 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
     evt.preventDefault();
 
     const newCommentPost: GuitarCommentPostType = {
-      userName: formRef.current?.['new-comment-post-name'].value,
-      advantage: formRef.current?.['new-comment-post-advantage'].value,
-      disadvantage: formRef.current?.['new-comment-post-disadvantage'].value,
-      comment: formRef.current?.['new-comment-post-comment-text'].value,
+      userName: formRef.current?.['new-comment-post-name'].value.trim(),
+      advantage: formRef.current?.['new-comment-post-advantage'].value.trim(),
+      disadvantage: formRef.current?.['new-comment-post-disadvantage'].value.trim(),
+      comment: formRef.current?.['new-comment-post-comment-text'].value.trim(),
       rating: Number(formRef.current?.['rate'].value),
       guitarId,
     };
@@ -74,11 +75,12 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
     }
   };
 
-  const handleOutsideModalClick = useCallback((evt) => {
-    if (!evt.composedPath().includes(modalRef.current)) {
-      handleModalClose();
+  const handleFirstElementFocus = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (evt.key === 'Tab') {
+      evt.preventDefault();
+      firstFocusElementRef.current?.focus();
     }
-  }, [handleModalClose]);
+  };
 
   const handleEscapeKeydown = useCallback((evt) => {
     if (evt.key === 'Escape') {
@@ -105,21 +107,19 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
   };
 
   useEffect(() => {
-    document.body.addEventListener('click', handleOutsideModalClick);
     document.body.addEventListener('keydown', handleEscapeKeydown);
     blockScroll();
 
     return () => {
-      document.body.removeEventListener('click', handleOutsideModalClick);
       document.body.removeEventListener('keydown', handleEscapeKeydown);
       allowScroll();
     };
-  }, [handleEscapeKeydown, handleOutsideModalClick]);
+  }, [handleEscapeKeydown]);
 
   return (
-    <div className="modal is-active modal--review modal-for-ui-kit">
+    <div className="modal is-active modal--review">
       <div className="modal__wrapper">
-        <div className="modal__overlay" data-close-modal=""></div>
+        <div className="modal__overlay" data-close-modal="" onClick={() => handleModalClose()}></div>
         <div className="modal__content" ref={modalRef}>
           <h2 className="modal__header modal__header--review title title--medium">Оставить отзыв</h2>
           <h3 className="modal__product-name title title--medium-20 title--uppercase">{guitarName}</h3>
@@ -129,7 +129,7 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
               <div className="form-review__name-wrapper">
 
                 <label className="form-review__label form-review__label--required" htmlFor="user-name">Ваше Имя</label>
-                <input className="form-review__input form-review__input--name" name='new-comment-post-name' id="user-name" type="text" autoComplete="off" />
+                <input className="form-review__input form-review__input--name" name='new-comment-post-name' id="user-name" type="text" data-testid='input-name' autoComplete="off" tabIndex={1} autoFocus ref={firstFocusElementRef} />
 
                 {
                   formFieldError.userName &&
@@ -168,33 +168,33 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
             </div>
 
             <label className="form-review__label" htmlFor="user-name">Достоинства</label>
-            <input className="form-review__input" name='new-comment-post-advantage' id="pros" type="text" autoComplete="off" />
+            <input className="form-review__input" name='new-comment-post-advantage' id="pros" type="text" autoComplete="off" tabIndex={2} />
 
             {
               formFieldError.advantage &&
-              <span className="form-review__warning">Поставьте оценку</span>
+              <span className="form-review__warning">Заполните поле</span>
             }
 
             <label className="form-review__label" htmlFor="user-name">Недостатки</label>
-            <input className="form-review__input" name='new-comment-post-disadvantage' id="user-name" type="text" autoComplete="off" />
+            <input className="form-review__input" name='new-comment-post-disadvantage' id="user-name" type="text" autoComplete="off" tabIndex={3} />
 
             {
               formFieldError.disadvantage &&
-              <span className="form-review__warning">Поставьте оценку</span>
+              <span className="form-review__warning">Заполните поле</span>
             }
 
             <label className="form-review__label" htmlFor="user-name">Комментарий</label>
-            <textarea className="form-review__input form-review__input--textarea" name='new-comment-post-comment-text' id="user-name" rows={10} autoComplete="off"></textarea>
+            <textarea tabIndex={4} className="form-review__input form-review__input--textarea" name='new-comment-post-comment-text' id="user-name" rows={5} autoComplete="off"></textarea>
 
             {
               formFieldError.comment &&
-              <span className="form-review__warning">Поставьте оценку</span>
+              <span className="form-review__warning">Заполните поле</span>
             }
 
-            <button className="button button--medium-20 form-review__button" type="submit">Отправить отзыв</button>
+            <button className="button button--medium-20 form-review__button" type="submit" tabIndex={5}>Отправить отзыв</button>
           </form>
 
-          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleModalClose}>
+          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleModalClose} tabIndex={6} onKeyDown={handleFirstElementFocus}>
             <span className="button-cross__icon"></span>
             <span className="modal__close-btn-interactive-area"></span>
           </button>

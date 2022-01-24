@@ -55,8 +55,23 @@ describe('Component: App', () => {
     expect(screen.getByText('Каталог гитар')).toBeInTheDocument();
   });
 
+  it('should render guitar page when user navigate to "/guitars/1"', () => {
+    const guitarId = 1;
+    history.push(AppRoute.getGuitarsRoute(guitarId));
+
+    render(
+      <Provider store={store}>
+        <BrowserRouter history={history}>
+          <App />
+        </BrowserRouter>
+      </Provider>,
+    );
+
+    expect(screen.getByText('Товар')).toBeInTheDocument();
+  });
+
   it('should render 404 component when user navigate to non-existent route', () => {
-    const nonExistentRoute = 'some-non-existent-route';
+    const nonExistentRoute = '/some-non-existent-route';
     history.push(nonExistentRoute);
 
     render(

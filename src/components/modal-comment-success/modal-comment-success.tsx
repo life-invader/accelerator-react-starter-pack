@@ -11,12 +11,6 @@ function ModalCommentSuccess({ handleModalSuccessClose }: ModalCommentSuccessTyp
     handleModalSuccessClose();
   };
 
-  const handleOutsideModalClick = useCallback((evt) => {
-    if (!evt.composedPath().includes(successWindowRef.current)) {
-      handleModalSuccessClose();
-    }
-  }, [handleModalSuccessClose]);
-
   const handleEscapeKeydown = useCallback((evt) => {
     if (evt.key === 'Escape') {
       handleModalSuccessClose();
@@ -38,22 +32,28 @@ function ModalCommentSuccess({ handleModalSuccessClose }: ModalCommentSuccessTyp
     document.body.style.paddingRight = '';
   };
 
+  const handleTabKeydown = (evt: KeyboardEvent) => {
+    if (evt.key === 'Tab') {
+      evt.preventDefault();
+    }
+  };
+
   useEffect(() => {
-    document.body.addEventListener('click', handleOutsideModalClick);
     document.body.addEventListener('keydown', handleEscapeKeydown);
+    document.body.addEventListener('keydown', handleTabKeydown);
     blockScroll();
 
     return () => {
-      document.body.removeEventListener('click', handleOutsideModalClick);
       document.body.removeEventListener('keydown', handleEscapeKeydown);
+      document.body.removeEventListener('keydown', handleTabKeydown);
       allowScroll();
     };
-  }, [handleEscapeKeydown, handleOutsideModalClick]);
+  }, [handleEscapeKeydown]);
 
   return (
-    <div className="modal is-active modal--success modal-for-ui-kit">
+    <div className="modal is-active modal--success">
       <div className="modal__wrapper">
-        <div className="modal__overlay" data-close-modal=""></div>
+        <div className="modal__overlay" data-close-modal="" onClick={handleModalClose}></div>
         <div className="modal__content" ref={successWindowRef}>
           <svg className="modal__icon" width="26" height="20" aria-hidden="true">
             <use xlinkHref="#icon-success"></use>
@@ -62,9 +62,9 @@ function ModalCommentSuccess({ handleModalSuccessClose }: ModalCommentSuccessTyp
           <div className="modal__button-container modal__button-container--review">
             <button className="button button--small modal__button modal__button--review" onClick={handleModalClose}>К покупкам!</button>
           </div>
-          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть">
+          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleModalClose}>
             <span className="button-cross__icon"></span>
-            <span className="modal__close-btn-interactive-area" onClick={handleModalClose}></span>
+            <span className="modal__close-btn-interactive-area"></span>
           </button>
         </div>
       </div>

@@ -42,7 +42,7 @@ describe('Filter reducer', () => {
     expect(filtersReducer(initialState, loadGuitarStringsCount(stringsCount)))
       .toEqual({
         ...initialState,
-        guitarStringsCount: [stringsCount],
+        guitarStringsList: [stringsCount],
       });
   });
 
@@ -50,13 +50,13 @@ describe('Filter reducer', () => {
     const stringsCount = '4';
     const mockInitialState = {
       ...initialState,
-      guitarStringsCount: [stringsCount, '6', '12'],
+      guitarStringsList: [stringsCount, '6', '12'],
     };
 
     expect(filtersReducer(mockInitialState, removeGuitarStringsCount(stringsCount)))
       .toEqual({
         ...mockInitialState,
-        guitarStringsCount: ['6', '12'],
+        guitarStringsList: ['6', '12'],
       });
   });
 

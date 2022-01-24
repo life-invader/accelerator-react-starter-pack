@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { createMockGuitar } from '../../utils/common';
+import { createMockGuitars } from '../../utils/common';
 import CatalogList from './catalog-list';
 
-const mockGuitar = createMockGuitar();
-const displayedGuitars = [mockGuitar];
+const displayedGuitars = createMockGuitars();
 
 describe('Component: CatalogList', () => {
   it('should render CatalogList component', () => {

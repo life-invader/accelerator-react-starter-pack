@@ -7,7 +7,7 @@ import HeaderSearch from './header-search/header-search';
 const NavLink = {
   Catalog: {
     title: 'Каталог',
-    route: AppRoute.getCatalogRoute(1),
+    route: AppRoute.getCatalogRoute(true),
   },
   WhereToBuy: {
     title: 'Где купить?',

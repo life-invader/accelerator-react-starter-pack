@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
 import { IGuitarWithComments } from '../../types/guitar';
 import DescriptionTab from './description-tab/description-tab';
@@ -28,20 +29,20 @@ function GuitarPageTabs({ currentGuitar }: GuitarPageTabsType) {
   };
 
   return (
-    <div className="tabs">
+    <div className="tabs" data-testid='tabs'>
       {
         Object.values(Tabs).map(({ name, title }, index) => (
-          <a
+          <Link
             key={`${name + index}`}
             data-activetab={title}
             className={`button button--medium tabs__button ${currentTab === title ? '' : 'button--black-border'}`}
-            href={AppRoute.getPlugRoute()}
+            to={AppRoute.getPlugRoute()}
             onClick={(evt: React.MouseEvent<HTMLAnchorElement>) => {
               evt.preventDefault();
               setCurrentTab(title);
             }}
           >{name}
-          </a>
+          </Link>
         ))
       }
 

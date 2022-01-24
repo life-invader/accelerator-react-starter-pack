@@ -33,14 +33,20 @@ export const guitarsReducer = createReducer(initialState, (builder) => {
     .addCase(loadGuitars, (state, action) => {
       state.guitars = action.payload;
     })
-    .addCase(loadCurrentGuitar, (state, action) => {
-      state.currentGuitar = action.payload;
-    })
     .addCase(loadDisplayedGuitars, (state, action) => {
       state.displayedGuitars = action.payload;
     })
     .addCase(loadSimilarGuitarsByName, (state, action) => {
       state.similarGuitars = action.payload;
+    })
+    .addCase(loadCurrentGuitar, (state, action) => {
+      state.currentGuitar = action.payload;
+    })
+    .addCase(loadCurrentGuitarFetchStatus, (state, action) => {
+      state.isCurrentGuitarFetching = action.payload;
+    })
+    .addCase(loadCurrentGuitarErrorStatus, (state, action) => {
+      state.isCurrentGuitarError = action.payload;
     })
     .addCase(loadFetchStatus, (state, action) => {
       state.isFetching = action.payload;
@@ -48,16 +54,10 @@ export const guitarsReducer = createReducer(initialState, (builder) => {
     .addCase(loadErrorStatus, (state, action) => {
       state.isError = action.payload;
     })
-    .addCase(loadNewCommentSuccessStatus, (state, action) => {
-      state.isNewCommentSuccess = action.payload;
-    })
     .addCase(loadNewComment, (state, action) => {
       state.currentGuitar?.comments?.push(action.payload);
     })
-    .addCase(loadCurrentGuitarFetchStatus, (state, action) => {
-      state.isCurrentGuitarFetching =  action.payload;
-    })
-    .addCase(loadCurrentGuitarErrorStatus, (state, action) => {
-      state.isCurrentGuitarError =  action.payload;
+    .addCase(loadNewCommentSuccessStatus, (state, action) => {
+      state.isNewCommentSuccess = action.payload;
     });
 });

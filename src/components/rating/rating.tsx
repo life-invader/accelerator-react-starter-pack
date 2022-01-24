@@ -18,11 +18,11 @@ function Rating({ rating = 1, starWidth = '12', starHeight = '12' }: RatingType)
     <>
       {
         paintedStars.map((_star, index) => (
-          <svg key={`${ITEM_KEY + index}`} width={starWidth} height={starHeight} aria-hidden="true">
+          <svg key={`${ITEM_KEY + index}`} width={starWidth} height={starHeight} aria-hidden="true" data-testid='painted-star'>
             <use xlinkHref="#icon-full-star"></use>
           </svg>
         )).concat(unpaintedStars.map((_star, index) => (
-          <svg key={`${Number(ITEM_KEY) - index}`} width="12" height="11" aria-hidden="true">
+          <svg key={`${Number(ITEM_KEY) - index}`} width="12" height="11" aria-hidden="true" data-testid='unpainted-star'>
             <use xlinkHref="#icon-star"></use>
           </svg>
         )))

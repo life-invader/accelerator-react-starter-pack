@@ -14,6 +14,8 @@
     "reselect": "4.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.16.7",
+    "@babel/preset-react": "^7.16.7",
     "@jedmao/redux-mock-store": "3.0.5",
     "@testing-library/dom": "^8.11.1",
     "@testing-library/jest-dom": "5.11.0",

@@ -116,8 +116,11 @@ function GuitarPage() {
         </div>
       </div>
       <section className="reviews">
-        <h3 className="reviews__title title title--bigger">Отзывы</h3>
-        <Link className="button button--red-border button--big reviews__sumbit-button" to={AppRoute.getPlugRoute()} onClick={handleModalOpen}>Оставить отзыв</Link>
+        {
+          sortedComments?.length > 0 &&
+          <h3 className="reviews__title title title--bigger">Отзывы</h3>
+        }
+        <Link className="button button--red-border button--big reviews__sumbit-button" to={AppRoute.getPlugRoute()} onClick={handleModalOpen} style={{ 'zIndex': '10' }}>Оставить отзыв</Link>
 
         <GuitarCommentList comments={sortedComments} />
 
