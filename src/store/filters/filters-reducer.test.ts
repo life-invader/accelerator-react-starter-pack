@@ -1,3 +1,5 @@
+import { SortOrder, SortType } from '../../constants/query-parameters';
+import { GuitarType, StringsCountType } from '../../types/guitar';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from './actions';
 import { filtersReducer, initialState } from './filters-reducer';
 
@@ -26,7 +28,7 @@ describe('Filter reducer', () => {
     const guitarType = 'ukulele';
     const mockInitialState = {
       ...initialState,
-      guitarTypes: [guitarType, 'acoustic', 'electric'],
+      guitarTypes: [guitarType, 'acoustic', 'electric'] as GuitarType[],
     };
 
     expect(filtersReducer(mockInitialState, removeGuitarTypes(guitarType)))
@@ -37,42 +39,42 @@ describe('Filter reducer', () => {
   });
 
   it('Load filters strings count', () => {
-    const stringsCount = '4';
+    const stringsCount = 4;
 
     expect(filtersReducer(initialState, loadGuitarStringsCount(stringsCount)))
       .toEqual({
         ...initialState,
-        guitarStringsList: [stringsCount],
+        guitarStringsCounts: [stringsCount],
       });
   });
 
   it('Remove filters strings count', () => {
-    const stringsCount = '4';
+    const stringsCount = 4;
     const mockInitialState = {
       ...initialState,
-      guitarStringsList: [stringsCount, '6', '12'],
+      guitarStringsCounts: [stringsCount, 6, 12] as StringsCountType[],
     };
 
     expect(filtersReducer(mockInitialState, removeGuitarStringsCount(stringsCount)))
       .toEqual({
         ...mockInitialState,
-        guitarStringsList: ['6', '12'],
+        guitarStringsCounts: [6, 12],
       });
   });
 
   it('Load filters sort type', () => {
-    expect(filtersReducer(initialState, loadSortType('byPrice')))
+    expect(filtersReducer(initialState, loadSortType(SortType.Price)))
       .toEqual({
         ...initialState,
-        sortType: 'byPrice',
+        sortType: SortType.Price,
       });
   });
 
   it('Load filters sort order', () => {
-    expect(filtersReducer(initialState, loadSortOrder('asc')))
+    expect(filtersReducer(initialState, loadSortOrder(SortOrder.Ascending)))
       .toEqual({
         ...initialState,
-        sortOrder: 'asc',
+        sortOrder: SortOrder.Ascending,
       });
   });
 });

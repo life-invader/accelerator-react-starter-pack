@@ -3,7 +3,7 @@ import { ApiRoute } from '../constants/routes';
 import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../constants/query-parameters';
 import { loadTotalPages } from './pagination/actions';
 import { ThunkActionResult } from './type';
-import { GuitarCommentPostType, GuitarCommentType } from '../types/guitar';
+import { GuitarCommentPostType, GuitarCommentType, IGuitarWithComments } from '../types/guitar';
 import { toast } from 'react-toastify';
 
 const TOTAL_CATALOG_PAGES_MIN = 1;
@@ -15,7 +15,7 @@ export const fetchGuitars = (): ThunkActionResult => async (dispatch, _getState,
     },
   };
 
-  const response = await api.get(ApiRoute.Guitars(), apiParams);
+  const response = await api.get<IGuitarWithComments[]>(ApiRoute.Guitars(), apiParams);
   dispatch(loadGuitars(response.data));
 };
 
@@ -23,7 +23,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
   const apiParams = {
     params: {
       [QueryParameters.Embed]: EmbedParameters.Comments,
-      [QueryParameters.StringCount]: getState().filters.guitarStringsList,
+      [QueryParameters.StringCount]: getState().filters.guitarStringsCounts,
       [QueryParameters.Type]: getState().filters.guitarTypes,
       [QueryParameters.Order]: getState().filters.sortOrder || null,
       [QueryParameters.Sort]: getState().filters.sortType || null,
@@ -38,7 +38,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
     dispatch(loadFetchStatus(true));
     dispatch(loadErrorStatus(false));
 
-    const response = await api.get(ApiRoute.Guitars(), apiParams);
+    const response = await api.get<IGuitarWithComments[]>(ApiRoute.Guitars(), apiParams);
 
     // Если после округления будет 0, то подставится 1, как минимально возможное кол-во страниц в каталоге
     const totalCatalogPages = Math.ceil(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || TOTAL_CATALOG_PAGES_MIN;
@@ -54,7 +54,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
 };
 
 export const fetchSimilarGuitarsByName = (guitarName: string): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
-  const response = await api.get(ApiRoute.Guitars(), {
+  const response = await api.get<IGuitarWithComments[]>(ApiRoute.Guitars(), {
     params: {
       [QueryParameters.Like]: guitarName,
     },
@@ -68,7 +68,7 @@ export const fetchCurrentGuitar = (id: string | number): ThunkActionResult => as
     dispatch(loadCurrentGuitarErrorStatus(false));
     dispatch(loadCurrentGuitarFetchStatus(true));
 
-    const response = await api.get(ApiRoute.Guitars(id), {
+    const response = await api.get<IGuitarWithComments>(ApiRoute.Guitars(id), {
       params: {
         [QueryParameters.Embed]: EmbedParameters.Comments,
       },

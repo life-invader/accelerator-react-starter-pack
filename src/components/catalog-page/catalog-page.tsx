@@ -7,13 +7,15 @@ import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSort
 import { fetchDisplayedGuitars, fetchGuitars } from '../../store/api-actions';
 import { AppRoute } from '../../constants/routes';
 import { SortOrder, SortType } from '../../constants/query-parameters';
-import { GuitarType, GuitarInfo, StringsCounts } from '../../constants/guitars';
+import { GuitarTypeValue, GuitarInfo, STRINGS_COUNTS } from '../../constants/guitars';
 import CatalogPagination from '../catalog-pagination/catalog-pagination';
 import { loadCurrentPage } from '../../store/pagination/actions';
 import CatalogList from '../catalog-list/catalog-list';
 import LoadingError from '../loading-error/loading-error';
 import { selectCurrentPage, selectTotalPages } from '../../store/pagination/selectors';
 import Spinner from '../spinner/spinner';
+import { GuitarType, StringsCountType } from '../../types/guitar';
+import { SortingOrder, SortingType } from '../../types/filters';
 
 function CatalogPage(): JSX.Element {
   const dispatch = useDispatch();
@@ -39,7 +41,7 @@ function CatalogPage(): JSX.Element {
   const guitarTypes = useSelector(selectGuitarTypes);
 
   const handleSortTypeButtonClick = (evt: React.BaseSyntheticEvent) => {
-    const currentSortType = evt.target.dataset.sort as string;
+    const currentSortType = evt.target.dataset.sort as SortingType;
 
     if (guitarsSortType === currentSortType) {
       return;
@@ -53,7 +55,7 @@ function CatalogPage(): JSX.Element {
   };
 
   const handleSortOrderButtonClick = (evt: React.BaseSyntheticEvent) => {
-    const currentSortOrder = evt.target.dataset.order as string;
+    const currentSortOrder = evt.target.dataset.order as SortingOrder;
     if (guitarsSortOrder === currentSortOrder) {
       return;
     }
@@ -66,7 +68,7 @@ function CatalogPage(): JSX.Element {
   };
 
   const handleGuitarTypeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const guitarType = evt.target.id;
+    const guitarType = evt.target.id as GuitarType;
 
     if (evt.target.checked) {
       dispatch(loadGuitarTypes(guitarType));
@@ -76,7 +78,7 @@ function CatalogPage(): JSX.Element {
   };
 
   const handleGuitarStringsCountChange = (evt: React.BaseSyntheticEvent) => {
-    const stringsCount = evt.target.dataset.strings as string;
+    const stringsCount = Number(evt.target.dataset.strings) as StringsCountType;
 
     if (evt.target.checked) {
       dispatch(loadGuitarStringsCount(stringsCount));
@@ -193,8 +195,9 @@ function CatalogPage(): JSX.Element {
       return;
     }
 
-    dispatch(loadGuitarTypes(searchParams.getAll('type')));
-    dispatch(loadGuitarStringsCount(searchParams.getAll('stringCount')));
+    dispatch(loadGuitarTypes(searchParams.getAll('type') as GuitarType[]));
+
+    dispatch(loadGuitarStringsCount(searchParams.getAll('stringCount').map((count) => Number(count)) as StringsCountType[]));
 
     const priceMin = searchParams.get('price_gte');
     const priceMax = searchParams.get('price_lte');
@@ -242,7 +245,7 @@ function CatalogPage(): JSX.Element {
     guitarTypes.forEach((type) => searchParams.append('type', type));
 
     searchParams.delete('stringCount');
-    guitarsStringsCount.forEach((stringCount) => searchParams.append('stringCount', stringCount));
+    guitarsStringsCount.forEach((stringCount) => searchParams.append('stringCount', stringCount.toString()));
 
     guitarsPriceRange.priceMin && searchParams.set('price_gte', guitarsPriceRange.priceMin.toString());
     guitarsPriceRange.priceMax && searchParams.set('price_lte', guitarsPriceRange.priceMax.toString());
@@ -282,7 +285,7 @@ function CatalogPage(): JSX.Element {
             <legend className='catalog-filter__block-title'>Тип гитар</legend>
 
             {
-              Object.values(GuitarType).map((guitarType) => (
+              Object.values(GuitarTypeValue).map((guitarType) => (
                 <div key={guitarType} className='form-checkbox catalog-filter__block-item'>
                   <input className='visually-hidden' type='checkbox' id={GuitarInfo[guitarType].id} name={GuitarInfo[guitarType].id} onChange={handleGuitarTypeChange} checked={guitarTypes.includes(guitarType)} />
                   <label htmlFor={GuitarInfo[guitarType].id}>{GuitarInfo[guitarType].name}</label>
@@ -295,16 +298,17 @@ function CatalogPage(): JSX.Element {
             <legend className='catalog-filter__block-title'>Количество струн</legend>
 
             {
-              StringsCounts.map((strings) => {
-                const isChecked = guitarsStringsCount.includes(strings.count.toString());
-                const isDisabled = !availableStrings.includes(strings.count);
+              STRINGS_COUNTS.map((strings) => {
+                const name = `${strings}-strings`;
+                const isChecked = guitarsStringsCount.includes(strings); // 7
+                const isDisabled = availableStrings.length > 0 ? !availableStrings.includes(strings) : false; // 4 6 7 12
 
-                (isChecked && isDisabled) && dispatch(removeGuitarStringsCount(strings.count.toString()));
+                (isChecked && isDisabled) && dispatch(removeGuitarStringsCount(strings));
 
                 return (
-                  <div key={strings.name} className='form-checkbox catalog-filter__block-item'>
-                    <input className='visually-hidden' type='checkbox' id={strings.name} name={strings.name} data-strings={strings.count} checked={!isDisabled && isChecked} onChange={handleGuitarStringsCountChange} disabled={isDisabled} />
-                    <label htmlFor={strings.name}>{strings.count}</label>
+                  <div key={name} className='form-checkbox catalog-filter__block-item'>
+                    <input className='visually-hidden' type='checkbox' id={name} name={name} data-strings={strings} checked={!isDisabled && isChecked} onChange={handleGuitarStringsCountChange} disabled={isDisabled} />
+                    <label htmlFor={name}>{strings}</label>
                   </div>
                 );
               })

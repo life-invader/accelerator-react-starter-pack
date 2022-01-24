@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { defaultStringsCounts } from '../../constants/guitars';
+import { STRINGS_COUNTS } from '../../constants/guitars';
 import { RootState } from '../root-reducer';
 
 export const selectAllGuitars = (state: RootState) => state.guitars.guitars;
@@ -30,7 +30,7 @@ export const selectPriceRangePlaceholders = createSelector(selectAllGuitars, (st
 
 export const selectAvailableStringsCount = createSelector(selectAllGuitars, (state) => state.filters.guitarTypes, (guitars, guitarTypes) => {
   if (!guitarTypes.length) {
-    return defaultStringsCounts;
+    return STRINGS_COUNTS;
   }
 
   const guitarsFiltered = guitars.filter((guitar) => guitarTypes.includes(guitar.type));

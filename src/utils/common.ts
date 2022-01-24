@@ -50,7 +50,7 @@ export const createMockGuitar = (): IGuitarWithComments => ({
   id: 1,
   name: 'guitar name',
   vendorCode: '123',
-  type: 'guitar type',
+  type: 'ukulele',
   description: 'description',
   previewImg: 'img_src',
   stringCount: 4,

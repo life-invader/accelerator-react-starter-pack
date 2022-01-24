@@ -1,8 +1,9 @@
 import { GuitarInfo } from '../../../constants/guitars';
+import { GuitarType } from '../../../types/guitar';
 
 type SpecificationsTabType = {
   vendorCode: string,
-  type: string,
+  type: GuitarType,
   description: string,
   stringCount: number,
 }

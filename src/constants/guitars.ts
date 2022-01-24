@@ -1,44 +1,30 @@
-export const defaultStringsCounts = [4, 6, 7, 12];
+export const STRINGS_COUNTS = [4, 6, 7, 12] as const;
 
-export const GuitarType = {
+export const GuitarTypeValue = {
   Acoustic: 'acoustic',
   Electric: 'electric',
   Ukulele: 'ukulele',
-};
+} as const;
 
 export const GuitarInfo = {
-  [GuitarType.Acoustic]: {
+  [GuitarTypeValue.Acoustic]: {
     name: 'Акустические гитары',
     nameForOne: 'Акустическая гитара',
     id: 'acoustic',
   },
-  [GuitarType.Electric]: {
+  [GuitarTypeValue.Electric]: {
     name: 'Электрогитары',
     nameForOne: 'Электрогитара',
     id: 'electric',
   },
-  [GuitarType.Ukulele]: {
+  [GuitarTypeValue.Ukulele]: {
     name: 'Укулеле',
     nameForOne: 'Укулеле',
     id: 'ukulele',
   },
-};
+} as const;
 
-export const StringsCounts = [
-  {
-    name: '4-strings',
-    count: 4,
-  },
-  {
-    name: '6-strings',
-    count: 6,
-  },
-  {
-    name: '7-strings',
-    count: 7,
-  },
-  {
-    name: '12-strings',
-    count: 12,
-  },
-];
+export const Tabs = {
+  Specifications: 'specs',
+  Description: 'desc',
+} as const;

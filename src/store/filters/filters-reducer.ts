@@ -1,20 +1,22 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { SortingOrder, SortingType } from '../../types/filters';
+import { GuitarType, StringsCountType } from '../../types/guitar';
 import { loadGuitarPriceRange, loadGuitarStringsCount, loadGuitarTypes, loadSortOrder, loadSortType, removeGuitarStringsCount, removeGuitarTypes } from './actions';
 
 type FiltersReducerType = {
   guitarPriceRange: { priceMin: number, priceMax: number },
-  guitarTypes: string[],
-  guitarStringsList: string[],
-  sortOrder: string,
-  sortType: string,
+  guitarTypes: GuitarType[],
+  guitarStringsCounts: StringsCountType[],
+  sortOrder: SortingOrder | null,
+  sortType: SortingType | null,
 }
 
 export const initialState: FiltersReducerType = {
   guitarPriceRange: { priceMin: 0, priceMax: 0 },
   guitarTypes: [],
-  guitarStringsList: [],
-  sortOrder: '',
-  sortType: '',
+  guitarStringsCounts: [],
+  sortOrder: null,
+  sortType: null,
 };
 
 export const filtersReducer = createReducer(initialState, (builder) => {
@@ -34,13 +36,13 @@ export const filtersReducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadGuitarStringsCount, (state, action) => {
       if (Array.isArray(action.payload)) {
-        state.guitarStringsList = action.payload;
+        state.guitarStringsCounts = action.payload;
         return;
       }
-      state.guitarStringsList.push(action.payload);
+      state.guitarStringsCounts.push(action.payload);
     })
     .addCase(removeGuitarStringsCount, (state, action) => {
-      state.guitarStringsList = state.guitarStringsList.filter((count) => count !== action.payload);
+      state.guitarStringsCounts = state.guitarStringsCounts.filter((count) => count !== action.payload);
     })
     .addCase(loadSortOrder, (state, action) => {
       state.sortOrder = action.payload;

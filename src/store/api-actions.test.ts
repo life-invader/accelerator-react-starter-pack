@@ -14,6 +14,7 @@ import { initialState as guitarsInitialState } from './guitars/guitars-reducer';
 import { initialState as filtersInitialState } from './filters/filters-reducer';
 import { initialState as paginationInitialState } from './pagination/pagination-reducer';
 import { createMockGuitar } from '../utils/common';
+import { GuitarType, StringsCountType } from '../types/guitar';
 
 const mockGuitar = createMockGuitar();
 const mockGuitars = createMockGuitars();
@@ -39,8 +40,8 @@ describe('Async actions', () => {
   });
 
   it('Should fetch displayed guitars', async () => {
-    const guitarStringsList = ['2', '4'];
-    const guitarTypes = ['ukulele'];
+    const guitarStringsList: StringsCountType[] = [6, 4];
+    const guitarTypes: GuitarType[] = ['ukulele'];
 
     const totalPages = 1;
     const xTotalCount = 9;
@@ -51,7 +52,7 @@ describe('Async actions', () => {
       },
       filters: {
         ...filtersInitialState,
-        guitarStringsList,
+        guitarStringsCounts: guitarStringsList,
         guitarTypes,
       },
     });

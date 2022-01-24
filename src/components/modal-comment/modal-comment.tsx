@@ -23,7 +23,7 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
   const firstFocusElementRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const [formFieldError, setFormFieldError] = useState<{ [key in keyof GuitarCommentPostType]: boolean }>({
+  const [formFieldError, setFormFieldError] = useState({
     userName: false,
     advantage: false,
     disadvantage: false,

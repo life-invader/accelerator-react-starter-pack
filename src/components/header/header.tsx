@@ -17,7 +17,7 @@ const NavLink = {
     title: 'О компании',
     route: AppRoute.getAboutRoute(),
   },
-};
+} as const;
 
 function Header() {
   const cart = useSelector(selectCart);
@@ -46,7 +46,9 @@ function Header() {
         <Link className='header__cart-link' to={AppRoute.getCartRoute()} aria-label='Корзина'>
           <svg className='header__cart-icon' width='14' height='14' aria-hidden='true'>
             <use xlinkHref='#icon-basket'></use>
-          </svg><span className='visually-hidden'>Перейти в корзину</span><span className='header__cart-count'>{cart}</span>
+          </svg>
+          <span className='visually-hidden'>Перейти в корзину</span>
+          <span className='header__cart-count'>{cart}</span>
         </Link>
       </div>
     </header >

@@ -1,3 +1,8 @@
+import { STRINGS_COUNTS, GuitarTypeValue } from '../constants/guitars';
+
+export type GuitarType = typeof GuitarTypeValue[keyof typeof GuitarTypeValue];
+export type StringsCountType = typeof STRINGS_COUNTS[number];
+
 export type GuitarCommentType = {
   id: string,
   userName: string,
@@ -22,10 +27,10 @@ export interface IGuitar {
   id: number,
   name: string,
   vendorCode: string,
-  type: string,
+  type: GuitarType,
   description: string,
   previewImg: string,
-  stringCount: number,
+  stringCount: StringsCountType,
   rating: number,
   price: number
 }
