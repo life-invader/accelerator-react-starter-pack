@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { api } from '../api/api';
 import { ApiRoute } from '../constants/routes';
 import { createMockComment, createMockGuitars, createNewUserCommentMock } from '../utils/common';
-import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName, loadFetchStatus, loadErrorStatus, loadCurrentGuitarErrorStatus, loadCurrentGuitarFetchStatus, loadCurrentGuitar, loadNewCommentSuccessStatus, loadNewComment } from './guitars/actions';
+import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName, loadFetchStatus, loadCurrentGuitarFetchStatus, loadCurrentGuitar, loadNewCommentSuccessStatus, loadNewComment } from './guitars/actions';
 import { State } from './type';
 import { Action } from 'redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
@@ -65,10 +65,8 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([
       loadFetchStatus(true),
-      loadErrorStatus(false),
       loadDisplayedGuitars(mockGuitars),
       loadTotalPages(totalPages),
-      loadFetchStatus(false),
     ]);
   });
 
@@ -103,10 +101,8 @@ describe('Async actions', () => {
     await store.dispatch(fetchCurrentGuitar(guitarId));
 
     expect(store.getActions()).toEqual([
-      loadCurrentGuitarErrorStatus(false),
       loadCurrentGuitarFetchStatus(true),
       loadCurrentGuitar(mockGuitar),
-      loadCurrentGuitarFetchStatus(false),
     ]);
   });
 
@@ -125,7 +121,6 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([
       loadNewCommentSuccessStatus(null),
-      loadNewCommentSuccessStatus(true),
       loadNewComment(mockComment),
     ]);
   });

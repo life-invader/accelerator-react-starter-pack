@@ -88,6 +88,7 @@ describe('Guitars reducer', () => {
             mockComment,
           ],
         },
+        isNewCommentSuccess: true,
       });
   });
 

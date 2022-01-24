@@ -36,7 +36,6 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
 
   try {
     dispatch(loadFetchStatus(true));
-    dispatch(loadErrorStatus(false));
 
     const response = await api.get<IGuitarWithComments[]>(ApiRoute.Guitars(), apiParams);
 
@@ -45,10 +44,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
 
     dispatch(loadDisplayedGuitars(response.data));
     dispatch(loadTotalPages(totalCatalogPages));
-
-    dispatch(loadFetchStatus(false));
   } catch {
-    dispatch(loadFetchStatus(false));
     dispatch(loadErrorStatus(true));
   }
 };
@@ -65,7 +61,6 @@ export const fetchSimilarGuitarsByName = (guitarName: string): ThunkActionResult
 
 export const fetchCurrentGuitar = (id: string | number): ThunkActionResult => async (dispatch, _getState, api): Promise<void> => {
   try {
-    dispatch(loadCurrentGuitarErrorStatus(false));
     dispatch(loadCurrentGuitarFetchStatus(true));
 
     const response = await api.get<IGuitarWithComments>(ApiRoute.Guitars(id), {
@@ -75,9 +70,7 @@ export const fetchCurrentGuitar = (id: string | number): ThunkActionResult => as
     });
 
     dispatch(loadCurrentGuitar(response.data));
-    dispatch(loadCurrentGuitarFetchStatus(false));
   } catch {
-    dispatch(loadCurrentGuitarFetchStatus(false));
     dispatch(loadCurrentGuitarErrorStatus(true));
   }
 };
@@ -88,7 +81,6 @@ export const sendNewComment = (newComment: GuitarCommentPostType): ThunkActionRe
 
     const { data: newPostedComment } = await api.post(ApiRoute.Comments(), newComment);
 
-    dispatch(loadNewCommentSuccessStatus(true));
     dispatch(loadNewComment(newPostedComment as GuitarCommentType));
   }
   catch {

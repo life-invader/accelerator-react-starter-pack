@@ -5,6 +5,6 @@ export const loadCurrentPage = createAction(ActionType.LOAD_CURRENT_PAGE, (curre
   payload: currentPage,
 }));
 
-export const loadTotalPages = createAction(ActionType.LOAD_TOTAL_PAGES, (totalpages: number) => ({
-  payload: totalpages,
+export const loadTotalPages = createAction(ActionType.LOAD_TOTAL_PAGES, (totalPages: number) => ({
+  payload: totalPages,
 }));
