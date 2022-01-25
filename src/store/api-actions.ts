@@ -1,7 +1,6 @@
 import { loadCurrentGuitar, loadCurrentGuitarErrorStatus, loadCurrentGuitarFetchStatus, loadDisplayedGuitars, loadErrorStatus, loadFetchStatus, loadGuitars, loadNewComment, loadNewCommentSuccessStatus, loadSimilarGuitarsByName } from './guitars/actions';
 import { ApiRoute } from '../constants/routes';
 import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../constants/query-parameters';
-import { loadTotalPages } from './pagination/actions';
 import { ThunkActionResult } from './type';
 import { GuitarCommentPostType, GuitarCommentType, IGuitarWithComments } from '../types/guitar';
 import { toast } from 'react-toastify';
@@ -35,6 +34,10 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
   };
 
   try {
+    if (getState().guitars.isFetching) {
+      return;
+    }
+
     dispatch(loadFetchStatus(true));
 
     const response = await api.get<IGuitarWithComments[]>(ApiRoute.Guitars(), apiParams);
@@ -42,8 +45,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
     // Если после округления будет 0, то подставится 1, как минимально возможное кол-во страниц в каталоге
     const totalCatalogPages = Math.ceil(response.headers['x-total-count'] / ONE_PAGE_GUITAR_LIMIT) || TOTAL_CATALOG_PAGES_MIN;
 
-    dispatch(loadDisplayedGuitars(response.data));
-    dispatch(loadTotalPages(totalCatalogPages));
+    dispatch(loadDisplayedGuitars(response.data, totalCatalogPages));
   } catch {
     dispatch(loadErrorStatus(true));
   }

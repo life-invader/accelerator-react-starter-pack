@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { loadDisplayedGuitars } from '../guitars/actions';
 import { loadCurrentPage, loadTotalPages } from './actions';
 
 type PaginationReducerType = {
@@ -18,5 +19,8 @@ export const paginationReducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadTotalPages, (state, action) => {
       state.totalPages = action.payload;
+    })
+    .addCase(loadDisplayedGuitars, (state, action) => {
+      state.totalPages = action.payload.totalPages;
     });
 });

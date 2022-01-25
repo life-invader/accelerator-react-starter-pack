@@ -17,7 +17,9 @@ describe('Guitars reducer', () => {
   });
 
   it('Load displayed guitars', () => {
-    expect(guitarsReducer(initialState, loadDisplayedGuitars(mockGuitars)))
+    const totalPages = 3;
+
+    expect(guitarsReducer(initialState, loadDisplayedGuitars(mockGuitars, totalPages)))
       .toEqual({
         ...initialState,
         displayedGuitars: mockGuitars,

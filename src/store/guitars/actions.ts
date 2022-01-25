@@ -38,6 +38,9 @@ export const loadSimilarGuitarsByName = createAction(ActionType.LOAD_SIMILAR_GUI
   payload: similarGuitars,
 }));
 
-export const loadDisplayedGuitars = createAction(ActionType.LOAD_DISPLAYED_GUITARS, (displayedGuitars: IGuitarWithComments[]) => ({
-  payload: displayedGuitars,
+export const loadDisplayedGuitars = createAction(ActionType.LOAD_DISPLAYED_GUITARS, (displayedGuitars: IGuitarWithComments[], totalPages: number) => ({
+  payload: {
+    displayedGuitars,
+    totalPages,
+  },
 }));

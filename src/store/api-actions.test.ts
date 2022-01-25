@@ -9,7 +9,6 @@ import { State } from './type';
 import { Action } from 'redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { fetchGuitars, fetchDisplayedGuitars, fetchSimilarGuitarsByName, fetchCurrentGuitar, sendNewComment } from './api-actions';
-import { loadTotalPages } from './pagination/actions';
 import { initialState as guitarsInitialState } from './guitars/guitars-reducer';
 import { initialState as filtersInitialState } from './filters/filters-reducer';
 import { initialState as paginationInitialState } from './pagination/pagination-reducer';
@@ -55,6 +54,9 @@ describe('Async actions', () => {
         guitarStringsCounts: guitarStringsList,
         guitarTypes,
       },
+      guitars: {
+        isFetching: false,
+      },
     });
 
     mockApi
@@ -65,8 +67,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([
       loadFetchStatus(true),
-      loadDisplayedGuitars(mockGuitars),
-      loadTotalPages(totalPages),
+      loadDisplayedGuitars(mockGuitars, totalPages),
     ]);
   });
 

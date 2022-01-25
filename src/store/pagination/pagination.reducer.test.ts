@@ -1,3 +1,5 @@
+import { createMockGuitars } from '../../utils/common';
+import { loadDisplayedGuitars } from '../guitars/actions';
 import { initialState } from '../pagination/pagination-reducer';
 import { loadCurrentPage, loadTotalPages } from './actions';
 import { paginationReducer } from './pagination-reducer';
@@ -17,6 +19,17 @@ describe('Pagination reducer', () => {
     const totalPages = 3;
 
     expect(paginationReducer(initialState, loadTotalPages(totalPages)))
+      .toEqual({
+        ...initialState,
+        totalPages: totalPages,
+      });
+  });
+
+  it('Should load total pages right after fetching guitars in one dispatch', () => {
+    const totalPages = 3;
+    const mockGuitars = createMockGuitars();
+
+    expect(paginationReducer(initialState, loadDisplayedGuitars(mockGuitars, totalPages)))
       .toEqual({
         ...initialState,
         totalPages: totalPages,

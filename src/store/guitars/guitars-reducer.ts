@@ -34,7 +34,7 @@ export const guitarsReducer = createReducer(initialState, (builder) => {
       state.guitars = action.payload;
     })
     .addCase(loadDisplayedGuitars, (state, action) => {
-      state.displayedGuitars = action.payload;
+      state.displayedGuitars = action.payload.displayedGuitars;
       state.isFetching = false;
     })
     .addCase(loadSimilarGuitarsByName, (state, action) => {
