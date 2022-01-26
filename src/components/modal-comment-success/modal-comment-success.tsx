@@ -35,6 +35,15 @@ function ModalCommentSuccess({ handleModalSuccessClose }: ModalCommentSuccessTyp
   const handleTabKeydown = (evt: KeyboardEvent) => {
     if (evt.key === 'Tab') {
       evt.preventDefault();
+
+      const button = document.querySelector('.modal__button--review') as HTMLButtonElement;
+      const closeButton = document.querySelector('.button-cross') as HTMLButtonElement;
+
+      button.focus();
+
+      if (evt.target === button) {
+        closeButton.focus();
+      }
     }
   };
 
@@ -60,9 +69,9 @@ function ModalCommentSuccess({ handleModalSuccessClose }: ModalCommentSuccessTyp
           </svg>
           <p className="modal__message">Спасибо за ваш отзыв!</p>
           <div className="modal__button-container modal__button-container--review">
-            <button className="button button--small modal__button modal__button--review" onClick={handleModalClose}>К покупкам!</button>
+            <button className="button button--small modal__button modal__button--review" tabIndex={1} onClick={handleModalClose}>К покупкам!</button>
           </div>
-          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleModalClose}>
+          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" tabIndex={2} onClick={handleModalClose}>
             <span className="button-cross__icon"></span>
             <span className="modal__close-btn-interactive-area"></span>
           </button>

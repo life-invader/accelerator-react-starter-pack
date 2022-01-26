@@ -17,8 +17,15 @@ function HeaderSearch() {
   const [searchName, setSearchName] = useState('');
 
   const handleGuitarClick = (id: number | string) => {
+    setSearchName('');
     history.push(AppRoute.getGuitarsRoute(id));
     handleFormBlur();
+  };
+
+  const handleGuitarKeydown = (evt: React.KeyboardEvent<HTMLLIElement>, id: number) => {
+    if (evt.key === 'Enter') {
+      handleGuitarClick(id);
+    }
   };
 
   const handleFormSubmit = (evt: React.FormEvent) => {
@@ -27,6 +34,7 @@ function HeaderSearch() {
 
   const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     if (!evt.target.value.trim()) {
+      setSearchName(evt.target.value.trim());
       setIsOpened(false);
       return;
     }
@@ -86,16 +94,17 @@ function HeaderSearch() {
         <button className='form-search__submit' type='submit'>
           <svg className='form-search__icon' width='14' height='15' aria-hidden='true'>
             <use xlinkHref='#icon-search'></use>
-          </svg><span className='visually-hidden'>Начать поиск</span>
+          </svg>
+          <span className='visually-hidden'>Начать поиск</span>
         </button>
-        <input className='form-search__input' id='search' type='text' autoComplete='off' placeholder='что вы ищете?' onInput={handleInputChange} onFocus={handleFormFocus} />
+        <input className='form-search__input' id='search' type='text' autoComplete='off' placeholder='что вы ищете?' onInput={handleInputChange} onFocus={handleFormFocus} value={searchName} />
         <label className='visually-hidden' htmlFor='search'>Поиск</label>
       </form>
       {
         (isOpened && similarGuitars) &&
         <ul className='form-search__select-list' style={{ zIndex: '10' }} data-testid='similar-guitars' >
           {
-            sortedGuitars.map(({ name, id }) => <li key={`${name}_${id}`} className='form-search__select-item' tabIndex={0} onClick={() => handleGuitarClick(id)} >{name}</li>)
+            sortedGuitars.map(({ name, id }) => <li key={`${name}_${id}`} className='form-search__select-item' tabIndex={0} onClick={() => handleGuitarClick(id)} onKeyDown={(evt) => handleGuitarKeydown(evt, id)} >{name}</li>)
           }
         </ul>
       }
