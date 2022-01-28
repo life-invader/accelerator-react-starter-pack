@@ -1,13 +1,31 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
+import { addToCart } from '../../store/cart/actions';
 import { IGuitarWithComments } from '../../types/guitar';
 import Rating from '../rating/rating';
+import React from 'react';
+import { selectIsInCart } from '../../store/cart/selectors';
 
 const RATE_COUNT_PLUG = 0;
 const STAR_HEIGHT = '11';
 const STAR_WIDTH = '12';
 
-function GuitarCard({ price, name, previewImg, rating, comments, id }: IGuitarWithComments): JSX.Element {
+type GuitarCardType = {
+  guitar: IGuitarWithComments,
+}
+
+function GuitarCard({ guitar }: GuitarCardType): JSX.Element {
+  const dispatch = useDispatch();
+
+  const { price, name, previewImg, rating, comments, id } = guitar;
+  const isInCart = useSelector(selectIsInCart(id));
+
+  const addToCartClickHandler = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
+    dispatch(addToCart(guitar));
+  };
+
   return (
     <div className="product-card">
       <img src={`/${previewImg}`} width="75" height="190" alt={name} />
@@ -28,7 +46,10 @@ function GuitarCard({ price, name, previewImg, rating, comments, id }: IGuitarWi
       <div className="product-card__buttons">
 
         <Link className="button button--mini" to={AppRoute.getGuitarsRoute(id)}>Подробнее</Link>
-        <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.getPlugRoute()}>Купить</Link>
+
+        {
+          isInCart ? <Link className="button button--red-border button--mini button--in-cart" to={AppRoute.getCartRoute()}>В Корзине</Link> : <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.getPlugRoute()} onClick={addToCartClickHandler}>Купить</Link>
+        }
 
       </div>
     </div>

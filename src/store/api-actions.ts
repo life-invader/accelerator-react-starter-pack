@@ -34,7 +34,7 @@ export const fetchDisplayedGuitars = (): ThunkActionResult => async (dispatch, g
   };
 
   try {
-    if (getState().guitars.isFetching) {
+    if (getState().guitars.displayedGuitars.isLoading) {
       return;
     }
 

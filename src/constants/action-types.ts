@@ -18,4 +18,9 @@ export const ActionType = {
   LOAD_FETCH_STATUS: 'guitars/LoadFetchStatus',
   LOAD_CURRENT_PAGE: 'pagination/LoadCurrentPage',
   LOAD_TOTAL_PAGES: 'pagination/LoadTotalPages',
+  ADD_TO_CART: 'cart/AddToCart',
+  REMOVE_FROM_CART: 'cart/RemoveFromCart',
+  INCREASE_ITEM_AMOUNT: 'cart/IncreaseItemAmount',
+  DECREASE_ITEM_AMOUNT: 'cart/DecreaseItemAmount',
+  CHANGE_ITEM_AMOUNT: 'cart/ChangeItemAmount',
 } as const;

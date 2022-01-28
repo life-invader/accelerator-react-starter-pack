@@ -5,6 +5,7 @@ import Page404 from '../page-404/page-404';
 import { AppRoute } from '../../constants/routes';
 import GuitarPage from '../guitar-page/guitar-page';
 import AppLayout from '../app-layout/app-layout';
+import Cart from '../cart/cart';
 
 function App(): JSX.Element {
   return (
@@ -18,6 +19,9 @@ function App(): JSX.Element {
         </Route>
         <Route exact path={AppRoute.getGuitarsRoute()}>
           <GuitarPage />
+        </Route>
+        <Route exact path={AppRoute.getCartRoute()}>
+          <Cart />
         </Route>
         <Route>
           <Page404 />

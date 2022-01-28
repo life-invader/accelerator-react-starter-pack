@@ -239,7 +239,7 @@ function CatalogPage(): JSX.Element {
 
   // Держит адресную строку согласно фильтрам
   useEffect(() => {
-    const searchParams = new URLSearchParams();
+    const searchParams = new URLSearchParams(location.search);
 
     searchParams.delete('type');
     guitarTypes.forEach((type) => searchParams.append('type', type));
@@ -251,7 +251,7 @@ function CatalogPage(): JSX.Element {
     guitarsPriceRange.priceMax && searchParams.set('price_lte', guitarsPriceRange.priceMax.toString());
 
     history.push(`${location.pathname}?${searchParams.toString()}`);
-  }, [guitarsSortOrder, guitarsSortType, guitarsPriceRange, guitarTypes, guitarsStringsCount, history, location.pathname]);
+  }, [guitarsSortOrder, guitarsSortType, guitarsPriceRange, guitarTypes, guitarsStringsCount, history, location.pathname, location.search]);
 
 
   return (
