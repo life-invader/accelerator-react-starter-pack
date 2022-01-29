@@ -3,12 +3,13 @@ import { AppRoute } from '../../constants/routes';
 import { selectCartItems, selectTotalPrice } from '../../store/cart/selectors';
 import CartItem from '../cart-item/cart-item';
 import { useSelector } from 'react-redux';
+import { formatGuitarPrice } from '../../utils/common';
+
+const DISCOUNT = 3000;
 
 function Cart() {
   const totalPrice = useSelector(selectTotalPrice);
   const cartItems = useSelector(selectCartItems);
-
-  const DISCOUNT = 3000;
 
   return (
     <>
@@ -48,15 +49,15 @@ function Cart() {
           <div className="cart__total-info">
             <p className="cart__total-item">
               <span className="cart__total-value-name">Всего:</span>
-              <span className="cart__total-value">{totalPrice} ₽</span>
+              <span className="cart__total-value">{formatGuitarPrice(totalPrice)} ₽</span>
             </p>
             <p className="cart__total-item">
               <span className="cart__total-value-name">Скидка:</span>
-              <span className="cart__total-value cart__total-value--bonus">- {DISCOUNT} ₽</span>
+              <span className="cart__total-value cart__total-value--bonus">- {formatGuitarPrice(DISCOUNT)} ₽</span>
             </p>
             <p className="cart__total-item">
               <span className="cart__total-value-name">К оплате:</span>
-              <span className="cart__total-value cart__total-value--payment">{totalPrice - DISCOUNT} ₽</span>
+              <span className="cart__total-value cart__total-value--payment">{formatGuitarPrice(totalPrice - DISCOUNT)} ₽</span>
             </p>
             <button className="button button--red button--big cart__order-button">Оформить заказ</button>
           </div>

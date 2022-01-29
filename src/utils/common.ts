@@ -71,3 +71,4 @@ export const createMockGuitars = (commentsNumber = 1) => {
 };
 
 export const formatCommentDate = (date: string) => dayjs(date).format('D MMMM');
+export const formatGuitarPrice = (price: number) => new Intl.NumberFormat('ru-RU').format(price);

@@ -1,11 +1,13 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
-import { addToCart } from '../../store/cart/actions';
 import { IGuitarWithComments } from '../../types/guitar';
 import Rating from '../rating/rating';
-import React from 'react';
+import React, { useState } from 'react';
 import { selectIsInCart } from '../../store/cart/selectors';
+import ModalAddToCart from '../modal-add-to-cart/modal-add-to-cart';
+import ModalAddedToCart from '../modal-added-to-cart/modal-added-to-cart';
+import { formatGuitarPrice } from '../../utils/common';
 
 const RATE_COUNT_PLUG = 0;
 const STAR_HEIGHT = '11';
@@ -16,43 +18,57 @@ type GuitarCardType = {
 }
 
 function GuitarCard({ guitar }: GuitarCardType): JSX.Element {
-  const dispatch = useDispatch();
-
   const { price, name, previewImg, rating, comments, id } = guitar;
-  const isInCart = useSelector(selectIsInCart(id));
+  const isInCart = useSelector(selectIsInCart(id)); // В корзине товар или нет
 
-  const addToCartClickHandler = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+  const [addToCartModalOpen, setAddToCartModalOpen] = useState(false); // состояние модалки "Добавить в корзину ?"
+  const [addedToCartModalOpen, setAddedToCartModalOpen] = useState(false); // состояние модалки "Товар успешно добавлен"
+
+  const addToCartButtonClickHandler = (evt: React.MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
-    dispatch(addToCart(guitar));
+    setAddToCartModalOpen(true);
   };
 
   return (
-    <div className="product-card">
-      <img src={`/${previewImg}`} width="75" height="190" alt={name} />
-      <div className="product-card__info">
-        <div className="rate product-card__rate" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
+    <>
+      <div className="product-card">
+        <img src={`/${previewImg}`} width="75" height="190" alt={name} />
+        <div className="product-card__info">
+          <div className="rate product-card__rate" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
+
+            {
+              <Rating rating={rating} starHeight={STAR_HEIGHT} starWidth={STAR_WIDTH} />
+            }
+
+            <span className="rate__count">{comments ? comments.length : RATE_COUNT_PLUG}</span>
+            <span className="rate__message"></span>
+          </div>
+          <p className="product-card__title">{name}</p>
+          <p className="product-card__price"><span className="visually-hidden">Цена:</span>{formatGuitarPrice(price)} ₽
+          </p>
+        </div>
+        <div className="product-card__buttons">
+
+          <Link className="button button--mini" to={AppRoute.getGuitarsRoute(id)}>Подробнее</Link>
 
           {
-            <Rating rating={rating} starHeight={STAR_HEIGHT} starWidth={STAR_WIDTH} />
+            isInCart ? <Link className="button button--red-border button--mini button--in-cart" to={AppRoute.getCartRoute()}>В Корзине</Link> : <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.getPlugRoute()} onClick={addToCartButtonClickHandler}>Купить</Link>
           }
 
-          <span className="rate__count">{comments ? comments.length : RATE_COUNT_PLUG}</span>
-          <span className="rate__message"></span>
         </div>
-        <p className="product-card__title">{name}</p>
-        <p className="product-card__price"><span className="visually-hidden">Цена:</span>{price} ₽
-        </p>
       </div>
-      <div className="product-card__buttons">
 
-        <Link className="button button--mini" to={AppRoute.getGuitarsRoute(id)}>Подробнее</Link>
+      {
+        addToCartModalOpen &&
+        <ModalAddToCart guitar={guitar} setAddToCartModalOpen={setAddToCartModalOpen} setAddedToCartModalOpen={setAddedToCartModalOpen} />
+      }
 
-        {
-          isInCart ? <Link className="button button--red-border button--mini button--in-cart" to={AppRoute.getCartRoute()}>В Корзине</Link> : <Link className="button button--red button--mini button--add-to-cart" to={AppRoute.getPlugRoute()} onClick={addToCartClickHandler}>Купить</Link>
-        }
+      {
+        addedToCartModalOpen &&
+        <ModalAddedToCart setAddedToCartModalOpen={setAddedToCartModalOpen} />
+      }
 
-      </div>
-    </div>
+    </>
   );
 }
 
