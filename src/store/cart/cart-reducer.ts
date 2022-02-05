@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { MAX_ITEM_AMOUNT, MIN_ITEM_AMOUNT } from '../../constants/cart';
 import { IGuitarWithComments } from '../../types/guitar';
 import { addToCart, changeItemAmount, decreaseItemAmount, increaseItemAmount, removeFromCart } from './actions';
 
@@ -61,8 +62,12 @@ export const cartReducer = createReducer(initialState, (builder) => {
     .addCase(changeItemAmount, (state, action) => {
       let newAmount = action.payload.newAmount;
 
-      if (action.payload.newAmount <= 0) {
+      if (action.payload.newAmount < MIN_ITEM_AMOUNT) {
         newAmount = 1;
+      }
+
+      if (action.payload.newAmount > MAX_ITEM_AMOUNT) {
+        newAmount = 99;
       }
 
       state.items[action.payload.id].itemAmount = newAmount;

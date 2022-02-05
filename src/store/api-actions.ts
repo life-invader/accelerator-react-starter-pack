@@ -4,6 +4,9 @@ import { QueryParameters, EmbedParameters, ONE_PAGE_GUITAR_LIMIT } from '../cons
 import { ThunkActionResult } from './type';
 import { GuitarCommentPostType, GuitarCommentType, IGuitarWithComments } from '../types/guitar';
 import { toast } from 'react-toastify';
+import { AnyAction, ThunkAction } from '@reduxjs/toolkit';
+import { RootState } from './root-reducer';
+import { AxiosInstance } from 'axios';
 
 const TOTAL_CATALOG_PAGES_MIN = 1;
 
@@ -89,5 +92,16 @@ export const sendNewComment = (newComment: GuitarCommentPostType): ThunkActionRe
     dispatch(loadNewCommentSuccessStatus(false));
     toast.error('Не удалось отправить комментарий', { position: toast.POSITION.TOP_LEFT, hideProgressBar: false, autoClose: 5000, closeOnClick: true });
   }
+};
+
+export const applyPromo = (promo: string): ThunkAction<Promise<number>, RootState, AxiosInstance, AnyAction> => async (_dispatch, _getState, api): Promise<number> => {
+  const coupon = {
+    'coupon': promo,
+  };
+
+  const { data } = await api.post<string>(ApiRoute.Coupons(), coupon);
+
+  const discount = Number(data);
+  return discount;
 };
 
