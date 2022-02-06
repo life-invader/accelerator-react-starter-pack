@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { MAX_ITEM_AMOUNT, MIN_ITEM_AMOUNT } from '../../constants/cart';
 import { IGuitarWithComments } from '../../types/guitar';
-import { addToCart, changeItemAmount, decreaseItemAmount, increaseItemAmount, removeFromCart } from './actions';
+import { addToCart, changeItemAmount, decreaseItemAmount, increaseItemAmount, loadDiscount, removeFromCart } from './actions';
 
 export interface ICartItem {
   item: IGuitarWithComments,
@@ -16,12 +16,14 @@ export type CartReducerType = {
   items: CartItemsType,
   cartAmount: number,
   totalPrice: number,
+  discount: number,
 }
 
 export const initialState: CartReducerType = {
   items: {},
   cartAmount: 0,
   totalPrice: 0,
+  discount: 0,
 };
 
 export const cartReducer = createReducer(initialState, (builder) => {
@@ -74,5 +76,8 @@ export const cartReducer = createReducer(initialState, (builder) => {
 
       state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
       state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
+    })
+    .addCase(loadDiscount, (state, action) => {
+      state.discount = action.payload;
     });
 });

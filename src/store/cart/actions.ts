@@ -21,3 +21,7 @@ export const decreaseItemAmount = createAction(ActionType.DECREASE_ITEM_AMOUNT, 
 export const changeItemAmount = createAction(ActionType.CHANGE_ITEM_AMOUNT, (data: { newAmount: number, id: number }) => ({
   payload: data,
 }));
+
+export const loadDiscount = createAction(ActionType.LOAD_DISCOUNT, (discount) => ({
+  payload: discount,
+}));

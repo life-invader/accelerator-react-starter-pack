@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
-import { selectCartItems, selectTotalPrice } from '../../store/cart/selectors';
+import { selectCartItems, selectDiscount, selectTotalPrice } from '../../store/cart/selectors';
 import CartItem from '../cart-item/cart-item';
 import { useSelector } from 'react-redux';
 import { formatGuitarPrice } from '../../utils/common';
 import React, { useEffect, useState } from 'react';
 import { applyPromo } from '../../store/api-actions';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { DiscountStatus } from '../../constants/cart';
 
 const DISCOUNT_PLUG = 0;
 const PERCENT = 100;
@@ -15,12 +16,12 @@ function Cart() {
   const dispatch = useAppDispatch();
   const totalPrice = useSelector(selectTotalPrice);
   const cartItems = useSelector(selectCartItems);
+  const discount = useSelector(selectDiscount); // Размер скидки в процентах (с сервака приходит)
 
-  const [promo, setPromo] = useState('');
-  const [discount, setDiscount] = useState(0);
-  const [discountMonetary, setDiscountMonetary] = useState(0);
-  const [isPromoAccepted, setIsPromoAccepted] = useState(false);
-  const [discountError, setDiscountError] = useState(false);
+  const [promo, setPromo] = useState(''); // Промокод из инпута / ввод пользователя
+  const [discountMonetary, setDiscountMonetary] = useState(0); // Размер скидки в рублях
+  const [isPromoAccepted, setIsPromoAccepted] = useState(false); // Промокод принят
+  const [discountError, setDiscountError] = useState(false); // Промокод недействителен
 
   const applyPromoClickHandler = (evt: React.MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
@@ -30,17 +31,20 @@ function Cart() {
     }
 
     dispatch(applyPromo(promo))
-      .then((response) => {
-        setDiscount(response);
-        setIsPromoAccepted(true);
-        setDiscountError(false);
-      })
-      .catch(() => {
-        !discount && setDiscount(0);
-        setDiscountError(true);
+      .then((status) => {
+        if (status === DiscountStatus.Success) {
+          setIsPromoAccepted(true);
+          setDiscountError(false);
+        }
+
+        if (status === DiscountStatus.Failure) {
+          setIsPromoAccepted(false);
+          setDiscountError(true);
+        }
       });
   };
 
+  // Эффект считает размер скидки в рублях
   useEffect(() => {
     setDiscountMonetary(totalPrice * discount / PERCENT);
   }, [discount, totalPrice]);

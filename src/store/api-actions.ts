@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit';
 import { RootState } from './root-reducer';
 import { AxiosInstance } from 'axios';
+import { loadDiscount } from './cart/actions';
+import { DiscountStatus } from '../constants/cart';
 
 const TOTAL_CATALOG_PAGES_MIN = 1;
 
@@ -94,14 +96,20 @@ export const sendNewComment = (newComment: GuitarCommentPostType): ThunkActionRe
   }
 };
 
-export const applyPromo = (promo: string): ThunkAction<Promise<number>, RootState, AxiosInstance, AnyAction> => async (_dispatch, _getState, api): Promise<number> => {
+export const applyPromo = (promo: string): ThunkAction<Promise<DiscountStatus>, RootState, AxiosInstance, AnyAction> => async (dispatch, _getState, api): Promise<DiscountStatus> => {
   const coupon = {
     'coupon': promo,
   };
 
-  const { data } = await api.post<string>(ApiRoute.Coupons(), coupon);
+  try {
+    const { data } = await api.post<string>(ApiRoute.Coupons(), coupon);
+    const discount = Number(data);
+    dispatch(loadDiscount(discount));
 
-  const discount = Number(data);
-  return discount;
+    return DiscountStatus.Success;
+  }
+  catch {
+    return DiscountStatus.Failure;
+  }
 };
 

@@ -23,4 +23,5 @@ export const ActionType = {
   INCREASE_ITEM_AMOUNT: 'cart/IncreaseItemAmount',
   DECREASE_ITEM_AMOUNT: 'cart/DecreaseItemAmount',
   CHANGE_ITEM_AMOUNT: 'cart/ChangeItemAmount',
+  LOAD_DISCOUNT: 'cart/LoadDiscount',
 } as const;
