@@ -20,7 +20,7 @@ describe('Component: ModalComment', () => {
   it('should render ModalComment component', () => {
     render(
       <Provider store={store}>
-        <ModalComment handleModalClose={handleModalClose} guitarName={mockGuitar.name} guitarId={mockGuitar.id} />
+        <ModalComment onModalClose={handleModalClose} guitarName={mockGuitar.name} guitarId={mockGuitar.id} />
       </Provider>,
     );
 

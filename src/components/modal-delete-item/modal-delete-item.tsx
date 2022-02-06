@@ -1,42 +1,24 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { GuitarInfo } from '../../constants/guitars';
+import { useModal } from '../../hooks/useModal';
 import { IGuitarWithComments } from '../../types/guitar';
 import { formatGuitarPrice } from '../../utils/common';
 
 type ModalDeleteItemType = {
   cartItem: IGuitarWithComments,
-  setModalDeleteItem: (value: boolean) => void,
-  removeItem: () => void,
+  onModalOpen: (value: boolean) => void,
+  onRemoveItem: () => void,
 }
 
-function ModalDeleteItem({ cartItem, setModalDeleteItem, removeItem }: ModalDeleteItemType) {
+function ModalDeleteItem({ cartItem, onModalOpen, onRemoveItem }: ModalDeleteItemType) {
   const firstFocusElementRef = useRef<HTMLButtonElement>(null);
   const { name, vendorCode, stringCount, price, type, previewImg } = cartItem;
 
   const handleModalClose = useCallback(() => {
-    setModalDeleteItem(false);
-  }, [setModalDeleteItem]);
+    onModalOpen(false);
+  }, [onModalOpen]);
 
-  const handleEscapeKeydown = useCallback((evt: KeyboardEvent) => {
-    if (evt.key === 'Escape') {
-      handleModalClose();
-    }
-  }, [handleModalClose]);
-
-  const blockScroll = () => {
-    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth; // ширина скролла справа
-    const bodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10) || 0; // отступ справа
-
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-  };
-
-  const allowScroll = () => {
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-  };
+  useModal(handleModalClose);
 
   const handleFirstElementFocus = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
     if (evt.key === 'Tab') {
@@ -44,16 +26,6 @@ function ModalDeleteItem({ cartItem, setModalDeleteItem, removeItem }: ModalDele
       firstFocusElementRef.current?.focus();
     }
   };
-
-  useEffect(() => {
-    document.body.addEventListener('keydown', handleEscapeKeydown);
-    blockScroll();
-
-    return () => {
-      document.body.removeEventListener('keydown', handleEscapeKeydown);
-      allowScroll();
-    };
-  }, [handleEscapeKeydown]);
 
   return (
     <div className="modal is-active modal-for-ui-kit">
@@ -74,7 +46,7 @@ function ModalDeleteItem({ cartItem, setModalDeleteItem, removeItem }: ModalDele
             </div>
           </div>
           <div className="modal__button-container">
-            <button className="button button--small modal__button" onClick={removeItem} autoFocus tabIndex={1} ref={firstFocusElementRef}>Удалить товар</button>
+            <button className="button button--small modal__button" onClick={onRemoveItem} autoFocus tabIndex={1} ref={firstFocusElementRef}>Удалить товар</button>
             <button className="button button--black-border button--small modal__button modal__button--right" onClick={handleModalClose} tabIndex={2}>Продолжить покупки</button>
           </div>
           <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleModalClose} onKeyDown={handleFirstElementFocus} tabIndex={3}>

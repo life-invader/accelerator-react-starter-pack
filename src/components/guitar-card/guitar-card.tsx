@@ -60,12 +60,12 @@ function GuitarCard({ guitar }: GuitarCardType): JSX.Element {
 
       {
         addToCartModalOpen &&
-        <ModalAddToCart guitar={guitar} setAddToCartModalOpen={setAddToCartModalOpen} setAddedToCartModalOpen={setAddedToCartModalOpen} />
+        <ModalAddToCart guitar={guitar} onAddToCartModalOpen={setAddToCartModalOpen} onAddedToCartModalOpen={setAddedToCartModalOpen} />
       }
 
       {
         addedToCartModalOpen &&
-        <ModalAddedToCart setAddedToCartModalOpen={setAddedToCartModalOpen} />
+        <ModalAddedToCart onAddedToCartModalOpen={setAddedToCartModalOpen} />
       }
 
     </>

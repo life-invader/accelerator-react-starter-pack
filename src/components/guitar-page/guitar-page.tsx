@@ -142,22 +142,22 @@ function GuitarPage() {
 
         {
           isModalOpened &&
-          <ModalComment handleModalClose={handleModalClose} guitarName={currentGuitar.name} guitarId={currentGuitar.id} />
+          <ModalComment onModalClose={handleModalClose} guitarName={currentGuitar.name} guitarId={currentGuitar.id} />
         }
 
         {
           isModalSuccessOpened &&
-          <ModalCommentSuccess handleModalSuccessClose={handleModalSuccessClose} />
+          <ModalCommentSuccess onModalSuccessClose={handleModalSuccessClose} />
         }
 
         {
           addToCartModalOpen &&
-          <ModalAddToCart guitar={currentGuitar} setAddToCartModalOpen={setAddToCartModalOpen} setAddedToCartModalOpen={setAddedToCartModalOpen} />
+          <ModalAddToCart guitar={currentGuitar} onAddToCartModalOpen={setAddToCartModalOpen} onAddedToCartModalOpen={setAddedToCartModalOpen} />
         }
 
         {
           addedToCartModalOpen &&
-          <ModalAddedToCart setAddedToCartModalOpen={setAddedToCartModalOpen} />
+          <ModalAddedToCart onAddedToCartModalOpen={setAddedToCartModalOpen} />
         }
 
       </section>

@@ -1,43 +1,26 @@
 import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
+import { useModal } from '../../hooks/useModal';
 
 type ModalAddedToCartType = {
-  setAddedToCartModalOpen: (value: boolean) => void,
+  onAddedToCartModalOpen: (value: boolean) => void,
 }
 
-function ModalAddedToCart({ setAddedToCartModalOpen }: ModalAddedToCartType) {
+function ModalAddedToCart({ onAddedToCartModalOpen }: ModalAddedToCartType) {
   const history = useHistory();
 
   const handleModalClose = useCallback(() => {
-    setAddedToCartModalOpen(false);
-  }, [setAddedToCartModalOpen]);
+    onAddedToCartModalOpen(false);
+  }, [onAddedToCartModalOpen]);
 
-  const handleEscapeKeydown = useCallback((evt: KeyboardEvent) => {
-    if (evt.key === 'Escape') {
-      handleModalClose();
-    }
-  }, [handleModalClose]);
+  useModal(handleModalClose);
 
   const goToCartButtonClickHandler = () => {
     history.push(AppRoute.getCartRoute());
   };
 
-  const blockScroll = () => {
-    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth; // ширина скролла справа
-    const bodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10) || 0; // отступ справа
-
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-  };
-
-  const allowScroll = () => {
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-  };
-
+  // Для навигации по кнопкам через tab
   const handleTabKeydown = (evt: KeyboardEvent) => {
     if (evt.key === 'Tab') {
       const goToCartButton = document.querySelector('.button.button--small.modal__button') as HTMLButtonElement;
@@ -56,16 +39,12 @@ function ModalAddedToCart({ setAddedToCartModalOpen }: ModalAddedToCartType) {
   };
 
   useEffect(() => {
-    document.body.addEventListener('keydown', handleEscapeKeydown);
     document.body.addEventListener('keydown', handleTabKeydown);
-    blockScroll();
 
     return () => {
-      document.body.removeEventListener('keydown', handleEscapeKeydown);
       document.body.removeEventListener('keydown', handleTabKeydown);
-      allowScroll();
     };
-  }, [handleEscapeKeydown]);
+  }, []);
 
   return (
     <div className="modal is-active modal--success">

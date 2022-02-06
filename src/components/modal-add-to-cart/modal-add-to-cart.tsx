@@ -1,50 +1,32 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { GuitarInfo } from '../../constants/guitars';
+import { useModal } from '../../hooks/useModal';
 import { addToCart } from '../../store/cart/actions';
 import { IGuitarWithComments } from '../../types/guitar';
 import { formatGuitarPrice } from '../../utils/common';
 
 type ModalAddToCartType = {
   guitar: IGuitarWithComments,
-  setAddToCartModalOpen: (value: boolean) => void,
-  setAddedToCartModalOpen: (value: boolean) => void,
+  onAddToCartModalOpen: (value: boolean) => void,
+  onAddedToCartModalOpen: (value: boolean) => void,
 }
 
-function ModalAddToCart({ guitar, setAddToCartModalOpen, setAddedToCartModalOpen }: ModalAddToCartType) {
+function ModalAddToCart({ guitar, onAddToCartModalOpen, onAddedToCartModalOpen }: ModalAddToCartType) {
   const dispatch = useDispatch();
   const firstFocusElementRef = useRef<HTMLButtonElement>(null);
   const { vendorCode, name, stringCount, price, previewImg, type } = guitar;
 
   const handleModalClose = useCallback(() => {
-    setAddToCartModalOpen(false);
-  }, [setAddToCartModalOpen]);
+    onAddToCartModalOpen(false);
+  }, [onAddToCartModalOpen]);
+
+  useModal(handleModalClose);
 
   const addToCartClickHandler = () => {
     dispatch(addToCart(guitar));
-    setAddToCartModalOpen(false);
-    setAddedToCartModalOpen(true);
-  };
-
-  const handleEscapeKeydown = useCallback((evt: KeyboardEvent) => {
-    if (evt.key === 'Escape') {
-      handleModalClose();
-    }
-  }, [handleModalClose]);
-
-  const blockScroll = () => {
-    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth; // ширина скролла справа
-    const bodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10) || 0; // отступ справа
-
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-  };
-
-  const allowScroll = () => {
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
+    onAddToCartModalOpen(false);
+    onAddedToCartModalOpen(true);
   };
 
   const handleFirstElementFocus = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -53,16 +35,6 @@ function ModalAddToCart({ guitar, setAddToCartModalOpen, setAddedToCartModalOpen
       firstFocusElementRef.current?.focus();
     }
   };
-
-  useEffect(() => {
-    document.body.addEventListener('keydown', handleEscapeKeydown);
-    blockScroll();
-
-    return () => {
-      document.body.removeEventListener('keydown', handleEscapeKeydown);
-      allowScroll();
-    };
-  }, [handleEscapeKeydown]);
 
   return (
     <div className="modal is-active modal-for-ui-kit">

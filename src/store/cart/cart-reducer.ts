@@ -33,7 +33,12 @@ export const cartReducer = createReducer(initialState, (builder) => {
         item: action.payload,
         itemAmount: 1,
       };
-      state.items[action.payload.id] = state.items[action.payload.id] ? { ...state.items[action.payload.id], itemAmount: state.items[action.payload.id].itemAmount + 1 } : newItem;
+
+      if (action.payload.id in state.items) {
+        state.items[action.payload.id].itemAmount += 1;
+      } else {
+        state.items[action.payload.id] = newItem;
+      }
 
       state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
       state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
@@ -45,14 +50,13 @@ export const cartReducer = createReducer(initialState, (builder) => {
       state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
     })
     .addCase(increaseItemAmount, (state, action) => {
-      state.items[action.payload].itemAmount = state.items[action.payload].itemAmount + 1;
+      state.items[action.payload].itemAmount += 1;
 
       state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
       state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
     })
     .addCase(decreaseItemAmount, (state, action) => {
-      state.items[action.payload].itemAmount = state.items[action.payload].itemAmount - 1;
-
+      state.items[action.payload].itemAmount -= 1;
 
       if (state.items[action.payload].itemAmount <= 0) {
         delete state.items[action.payload];
@@ -65,11 +69,11 @@ export const cartReducer = createReducer(initialState, (builder) => {
       let newAmount = action.payload.newAmount;
 
       if (action.payload.newAmount < MIN_ITEM_AMOUNT) {
-        newAmount = 1;
+        newAmount = MIN_ITEM_AMOUNT;
       }
 
       if (action.payload.newAmount > MAX_ITEM_AMOUNT) {
-        newAmount = 99;
+        newAmount = MAX_ITEM_AMOUNT;
       }
 
       state.items[action.payload.id].itemAmount = newAmount;

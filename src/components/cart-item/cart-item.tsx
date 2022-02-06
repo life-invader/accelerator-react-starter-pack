@@ -22,21 +22,21 @@ function CartItem({ cartItem }: CaryItemType) {
   const { itemAmount, item } = cartItem; // Количество товара в корзине и сам товар
   const { name, price, vendorCode, stringCount, previewImg, id, type } = item; // инфа товара для отображения
 
-  const [modalDeleteItemOpen, setModalDeleteItemOpen] = useState(false);
+  const [isModalDeleteItemOpened, setIsModalDeleteItemOpened] = useState(false);
   const [amount, setAmount] = useState(itemAmount);
 
-  const removeItemFromCartHandler = () => {
+  const removeItemFromCart = () => {
     dispatch(removeFromCart(id));
   };
 
   const removeItemButtonClickHandler = () => {
-    setModalDeleteItemOpen(true);
+    setIsModalDeleteItemOpened(true);
   };
 
-  const changeItemAmountButtonHandler = (evt: React.BaseSyntheticEvent) => {
+  const changeItemAmountButtonClickHandler = (evt: React.BaseSyntheticEvent) => {
     if (evt.currentTarget.dataset.change === ChangeAmountType.Decrement) {
       if (amount === 1) {
-        setModalDeleteItemOpen(true);
+        setIsModalDeleteItemOpened(true);
         return;
       }
 
@@ -66,7 +66,7 @@ function CartItem({ cartItem }: CaryItemType) {
     dispatch(changeItemAmount({ newAmount: amount, id }));
   };
 
-  const changeItemAmountHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const itemAmountChangeHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const newAmount = Number(evt.target.value);
     setAmount(newAmount);
   };
@@ -88,13 +88,13 @@ function CartItem({ cartItem }: CaryItemType) {
         </div>
         <div className="cart-item__price">{formatGuitarPrice(price)} ₽</div>
         <div className="quantity cart-item__quantity">
-          <button className="quantity__button" aria-label="Уменьшить количество" data-change={ChangeAmountType.Decrement} onClick={changeItemAmountButtonHandler}>
+          <button className="quantity__button" aria-label="Уменьшить количество" data-change={ChangeAmountType.Decrement} onClick={changeItemAmountButtonClickHandler}>
             <svg width="8" height="8" aria-hidden="true">
               <use xlinkHref="#icon-minus"></use>
             </svg>
           </button>
-          <input className="quantity__input" type="number" placeholder={itemAmount.toString()} value={amount} id="2-count" name="2-count" min={1} max={99} onChange={changeItemAmountHandler} onBlur={changeItemAmountBlurHandler} />
-          <button className="quantity__button" aria-label="Увеличить количество" data-change={ChangeAmountType.Increment} onClick={changeItemAmountButtonHandler}>
+          <input className="quantity__input" type="number" placeholder={itemAmount.toString()} value={amount} id="2-count" name="2-count" min={1} max={99} onChange={itemAmountChangeHandler} onBlur={changeItemAmountBlurHandler} />
+          <button className="quantity__button" aria-label="Увеличить количество" data-change={ChangeAmountType.Increment} onClick={changeItemAmountButtonClickHandler}>
             <svg width="8" height="8" aria-hidden="true">
               <use xlinkHref="#icon-plus"></use>
             </svg>
@@ -104,8 +104,8 @@ function CartItem({ cartItem }: CaryItemType) {
       </div>
 
       {
-        modalDeleteItemOpen &&
-        <ModalDeleteItem cartItem={item} setModalDeleteItem={setModalDeleteItemOpen} removeItem={removeItemFromCartHandler} />
+        isModalDeleteItemOpened &&
+        <ModalDeleteItem cartItem={item} onModalOpen={setIsModalDeleteItemOpened} onRemoveItem={removeItemFromCart} />
       }
 
     </>
