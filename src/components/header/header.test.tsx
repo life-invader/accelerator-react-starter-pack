@@ -3,14 +3,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { State } from '../../store/type';
+import { RootState } from '../../store/root-reducer';
 import Header from './header';
 
-const mockStore = configureMockStore<State>();
+const mockStore = configureMockStore<RootState>();
 const store = mockStore({
   guitars: {
-    cart: 0,
     similarGuitars: [],
+  },
+  cart: {
+    cartAmount: 0,
   },
 });
 

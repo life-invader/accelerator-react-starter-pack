@@ -52,13 +52,17 @@ export const cartReducer = createReducer(initialState, (builder) => {
     .addCase(increaseItemAmount, (state, action) => {
       state.items[action.payload].itemAmount += 1;
 
+      if (state.items[action.payload].itemAmount > MAX_ITEM_AMOUNT) {
+        state.items[action.payload].itemAmount = MAX_ITEM_AMOUNT;
+      }
+
       state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
       state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
     })
     .addCase(decreaseItemAmount, (state, action) => {
       state.items[action.payload].itemAmount -= 1;
 
-      if (state.items[action.payload].itemAmount <= 0) {
+      if (state.items[action.payload].itemAmount < MIN_ITEM_AMOUNT) {
         delete state.items[action.payload];
       }
 
@@ -68,11 +72,11 @@ export const cartReducer = createReducer(initialState, (builder) => {
     .addCase(changeItemAmount, (state, action) => {
       let newAmount = action.payload.newAmount;
 
-      if (action.payload.newAmount < MIN_ITEM_AMOUNT) {
+      if (newAmount < MIN_ITEM_AMOUNT) {
         newAmount = MIN_ITEM_AMOUNT;
       }
 
-      if (action.payload.newAmount > MAX_ITEM_AMOUNT) {
+      if (newAmount > MAX_ITEM_AMOUNT) {
         newAmount = MAX_ITEM_AMOUNT;
       }
 

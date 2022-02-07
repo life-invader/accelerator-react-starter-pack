@@ -77,18 +77,32 @@ describe('Guitars reducer', () => {
   it('Load new comment', () => {
     const initialStore = {
       ...initialState,
-      currentGuitar: mockGuitar,
+      currentGuitar: {
+        data: {
+          ...mockGuitar,
+          comments: [
+            ...mockGuitar.comments,
+            mockComment,
+          ],
+        },
+        isLoading: false,
+        isError: false,
+      },
     };
 
     expect(guitarsReducer(initialStore, loadNewComment(mockComment)))
       .toEqual({
         ...initialState,
         currentGuitar: {
-          ...mockGuitar,
-          comments: [
-            ...mockGuitar.comments,
-            mockComment,
-          ],
+          data: {
+            ...mockGuitar,
+            comments: [
+              ...mockGuitar.comments,
+              mockComment,
+            ],
+          },
+          isLoading: false,
+          isError: false,
         },
         isNewCommentSuccess: true,
       });

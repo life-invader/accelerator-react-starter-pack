@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { MAX_ITEM_AMOUNT, MIN_ITEM_AMOUNT } from '../../constants/cart';
 import { GuitarInfo } from '../../constants/guitars';
@@ -20,7 +20,7 @@ function CartItem({ cartItem }: CaryItemType) {
   const dispatch = useDispatch();
 
   const { itemAmount, item } = cartItem; // Количество товара в корзине и сам товар
-  const { name, price, vendorCode, stringCount, previewImg, id, type } = item; // инфа товара для отображения
+  const { name, price, vendorCode, stringCount, previewImg, id, type } = item; // Инфа товара для отображения
 
   const [isModalDeleteItemOpened, setIsModalDeleteItemOpened] = useState(false);
   const [amount, setAmount] = useState(itemAmount);
@@ -41,16 +41,10 @@ function CartItem({ cartItem }: CaryItemType) {
       }
 
       dispatch(decreaseItemAmount(id));
-      setAmount((prevState) => prevState - 1);
     }
 
     if (evt.currentTarget.dataset.change === ChangeAmountType.Increment) {
-      if (amount >= MAX_ITEM_AMOUNT) {
-        return;
-      }
-
       dispatch(increaseItemAmount(id));
-      setAmount((prevState) => prevState + 1);
     }
   };
 
@@ -59,7 +53,7 @@ function CartItem({ cartItem }: CaryItemType) {
       setAmount(MIN_ITEM_AMOUNT);
     }
 
-    if (amount >= MAX_ITEM_AMOUNT) {
+    if (amount > MAX_ITEM_AMOUNT) {
       setAmount(MAX_ITEM_AMOUNT);
     }
 
@@ -70,6 +64,11 @@ function CartItem({ cartItem }: CaryItemType) {
     const newAmount = Number(evt.target.value);
     setAmount(newAmount);
   };
+
+  useEffect(() => {
+    setAmount(itemAmount);
+  }, [cartItem, itemAmount]);
+
 
   return (
     <>
@@ -93,7 +92,7 @@ function CartItem({ cartItem }: CaryItemType) {
               <use xlinkHref="#icon-minus"></use>
             </svg>
           </button>
-          <input className="quantity__input" type="number" placeholder={itemAmount.toString()} value={amount} id="2-count" name="2-count" min={1} max={99} onChange={itemAmountChangeHandler} onBlur={changeItemAmountBlurHandler} />
+          <input className="quantity__input" type="number" placeholder={itemAmount.toString()} value={amount} id="2-count" name="2-count" min={MIN_ITEM_AMOUNT} max={MAX_ITEM_AMOUNT} onChange={itemAmountChangeHandler} onBlur={changeItemAmountBlurHandler} />
           <button className="quantity__button" aria-label="Увеличить количество" data-change={ChangeAmountType.Increment} onClick={changeItemAmountButtonClickHandler}>
             <svg width="8" height="8" aria-hidden="true">
               <use xlinkHref="#icon-plus"></use>

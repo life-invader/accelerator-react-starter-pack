@@ -9,7 +9,7 @@ describe('Component: GuitarCard', () => {
   it('should render GuitarCard component', () => {
     render(
       <BrowserRouter>
-        <GuitarCard {...mockGuitar} />
+        <GuitarCard guitar={mockGuitar} />
       </BrowserRouter>,
     );
 

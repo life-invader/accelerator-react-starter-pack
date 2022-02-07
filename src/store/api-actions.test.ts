@@ -5,7 +5,6 @@ import { api } from '../api/api';
 import { ApiRoute } from '../constants/routes';
 import { createMockComment, createMockGuitars, createNewUserCommentMock } from '../utils/common';
 import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName, loadFetchStatus, loadCurrentGuitarFetchStatus, loadCurrentGuitar, loadNewCommentSuccessStatus, loadNewComment } from './guitars/actions';
-import { State } from './type';
 import { Action } from 'redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { fetchGuitars, fetchDisplayedGuitars, fetchSimilarGuitarsByName, fetchCurrentGuitar, sendNewComment } from './api-actions';
@@ -14,6 +13,7 @@ import { initialState as filtersInitialState } from './filters/filters-reducer';
 import { initialState as paginationInitialState } from './pagination/pagination-reducer';
 import { createMockGuitar } from '../utils/common';
 import { GuitarType, StringsCountType } from '../types/guitar';
+import { RootState } from './root-reducer';
 
 const mockGuitar = createMockGuitar();
 const mockGuitars = createMockGuitars();
@@ -23,7 +23,7 @@ const newMockUserComment = createNewUserCommentMock();
 describe('Async actions', () => {
   const mockApi = new AxiosMockAdapter(api);
   const middleware = [thunk.withExtraArgument(api)];
-  const mockStore = configureMockStore<State, Action, ThunkDispatch<State, typeof api, Action>>(middleware);
+  const mockStore = configureMockStore<RootState, Action, ThunkDispatch<RootState, typeof api, Action>>(middleware);
 
   it('Should fetch all guitars', async () => {
     const store = mockStore();
@@ -55,7 +55,7 @@ describe('Async actions', () => {
         guitarTypes,
       },
       guitars: {
-        isFetching: false,
+        ...guitarsInitialState,
       },
     });
 
