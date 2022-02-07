@@ -4,14 +4,14 @@ import { Provider } from 'react-redux';
 import { Router as BrowserRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import App from './app';
-import { State } from '../../store/type';
 import { AppRoute } from '../../constants/routes';
 import { initialState as guitarInitialState } from '../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../store/pagination/pagination-reducer';
+import { RootState } from '../../store/root-reducer';
 
 const history = createMemoryHistory();
-const mockStore = configureMockStore<State>();
+const mockStore = configureMockStore<RootState>();
 const store = mockStore({
   guitars: {
     ...guitarInitialState,

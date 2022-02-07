@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useModal } from '../../hooks/useModal';
 import { sendNewComment } from '../../store/api-actions';
 import { GuitarCommentPostType } from '../../types/guitar';
 
 type ModalCommentType = {
-  handleModalClose: () => void,
+  onModalClose: () => void,
   guitarName: string,
   guitarId: number,
 }
@@ -18,11 +19,14 @@ const newPostCommentTemplate: GuitarCommentPostType = {
   guitarId: 0,
 };
 
-function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentType) {
+function ModalComment({ onModalClose, guitarName, guitarId }: ModalCommentType) {
   const dispatch = useDispatch();
+  useModal(onModalClose);
+
   const firstFocusElementRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
+
   const [formFieldError, setFormFieldError] = useState({
     userName: false,
     advantage: false,
@@ -82,44 +86,11 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
     }
   };
 
-  const handleEscapeKeydown = useCallback((evt) => {
-    if (evt.key === 'Escape') {
-      if (evt.target.tagName === 'INPUT' || evt.target.tagName === 'TEXTAREA') {
-        return;
-      }
-      handleModalClose();
-    }
-  }, [handleModalClose]);
-
-  const blockScroll = () => {
-    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth; // ширина скролла справа
-    const bodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10) || 0; // отступ справа
-
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-
-    document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-  };
-
-  const allowScroll = () => {
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-  };
-
-  useEffect(() => {
-    document.body.addEventListener('keydown', handleEscapeKeydown);
-    blockScroll();
-
-    return () => {
-      document.body.removeEventListener('keydown', handleEscapeKeydown);
-      allowScroll();
-    };
-  }, [handleEscapeKeydown]);
 
   return (
     <div className="modal is-active modal--review">
       <div className="modal__wrapper">
-        <div className="modal__overlay" data-close-modal="" onClick={() => handleModalClose()}></div>
+        <div className="modal__overlay" data-close-modal="" onClick={onModalClose}></div>
         <div className="modal__content" ref={modalRef}>
           <h2 className="modal__header modal__header--review title title--medium">Оставить отзыв</h2>
           <h3 className="modal__product-name title title--medium-20 title--uppercase">{guitarName}</h3>
@@ -194,7 +165,7 @@ function ModalComment({ handleModalClose, guitarName, guitarId }: ModalCommentTy
             <button className="button button--medium-20 form-review__button" type="submit" tabIndex={5}>Отправить отзыв</button>
           </form>
 
-          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleModalClose} tabIndex={6} onKeyDown={handleFirstElementFocus}>
+          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={onModalClose} tabIndex={6} onKeyDown={handleFirstElementFocus}>
             <span className="button-cross__icon"></span>
             <span className="modal__close-btn-interactive-area"></span>
           </button>

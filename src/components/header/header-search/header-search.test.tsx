@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import HeaderSearch from './header-search';
-import { State } from '../../../store/type';
 import { initialState as guitarsInitialState } from '../../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../../store/pagination/pagination-reducer';
 import userEvent from '@testing-library/user-event';
+import { RootState } from '../../../store/root-reducer';
 
-const mockStore = configureMockStore<State>();
+const mockStore = configureMockStore<RootState>();
 const store = mockStore({
   guitars: {
     ...guitarsInitialState,

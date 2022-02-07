@@ -4,18 +4,18 @@ import thunk from 'redux-thunk';
 import { Router as BrowserRouter } from 'react-router-dom';
 import CatalogPage from './catalog-page';
 import { configureMockStore } from '@jedmao/redux-mock-store';
-import { State } from '../../store/type';
 import { initialState as guitarInitialState } from '../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../store/pagination/pagination-reducer';
 import { api } from '../../api/api';
 import { createMemoryHistory } from 'history';
 import { createMockGuitars } from '../../utils/common';
+import { RootState } from '../../store/root-reducer';
 
 const mockGuitar = createMockGuitars();
 
 const history = createMemoryHistory();
-const mockStore = configureMockStore<State>([thunk.withExtraArgument(api)]);
+const mockStore = configureMockStore<RootState>([thunk.withExtraArgument(api)]);
 const store = mockStore({
   guitars: {
     ...guitarInitialState,

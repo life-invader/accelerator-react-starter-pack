@@ -3,6 +3,7 @@ const CATALOG_FIRST_PAGE = 1;
 export const ApiRoute = {
   Guitars: (id?: string | number) => `/guitars${id ? `/${id}` : ''}`,
   Comments: () => '/comments',
+  Coupons: () => '/coupons',
 } as const;
 
 export const AppRoute = {

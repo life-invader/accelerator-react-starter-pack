@@ -9,7 +9,7 @@ function CatalogList({ displayedGuitars }: CatalogListType) {
   return (
     <div className='cards catalog__cards'>
       {
-        (displayedGuitars.length > 0 && displayedGuitars.map((guitar) => <GuitarCard key={guitar.id} {...guitar} />))
+        (displayedGuitars.length > 0 && displayedGuitars.map((guitar) => <GuitarCard key={guitar.id} guitar={guitar} />))
       }
     </div>
   );

@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
-import { selectCart } from '../../store/guitars/selectors';
+import { selectCartAmount } from '../../store/cart/selectors';
 import HeaderSearch from './header-search/header-search';
 
 const NavLink = {
@@ -20,7 +20,7 @@ const NavLink = {
 } as const;
 
 function Header() {
-  const cart = useSelector(selectCart);
+  const cart = useSelector(selectCartAmount);
   const location = useLocation();
 
   return (

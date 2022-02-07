@@ -2,13 +2,13 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { configureMockStore } from '@jedmao/redux-mock-store';
-import { State } from '../../store/type';
 import { api } from '../../api/api';
 import ModalComment from './modal-comment';
 import { createMockGuitar } from '../../utils/common';
 import userEvent from '@testing-library/user-event';
+import { RootState } from '../../store/root-reducer';
 
-const mockStore = configureMockStore<State>([thunk.withExtraArgument(api)]);
+const mockStore = configureMockStore<RootState>([thunk.withExtraArgument(api)]);
 const store = mockStore();
 store.dispatch = jest.fn();
 
@@ -20,7 +20,7 @@ describe('Component: ModalComment', () => {
   it('should render ModalComment component', () => {
     render(
       <Provider store={store}>
-        <ModalComment handleModalClose={handleModalClose} guitarName={mockGuitar.name} guitarId={mockGuitar.id} />
+        <ModalComment onModalClose={handleModalClose} guitarName={mockGuitar.name} guitarId={mockGuitar.id} />
       </Provider>,
     );
 

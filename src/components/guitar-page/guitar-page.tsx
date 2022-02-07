@@ -5,9 +5,12 @@ import { AppRoute } from '../../constants/routes';
 import { fetchCurrentGuitar } from '../../store/api-actions';
 import { loadNewCommentSuccessStatus } from '../../store/guitars/actions';
 import { selectCurrentGuitar, selectCurrentGuitarErrorStatus, selectCurrentGuitarFetchingStatus, selectNewCommentStatus } from '../../store/guitars/selectors';
+import { formatGuitarPrice } from '../../utils/common';
 import GuitarCommentList from '../guitar-comment-list/guitar-comment-list';
 import GuitarPageTabs from '../guitar-page-tabs/guitar-page-tabs';
 import LoadingError from '../loading-error/loading-error';
+import ModalAddToCart from '../modal-add-to-cart/modal-add-to-cart';
+import ModalAddedToCart from '../modal-added-to-cart/modal-added-to-cart';
 import ModalCommentSuccess from '../modal-comment-success/modal-comment-success';
 import ModalComment from '../modal-comment/modal-comment';
 import Rating from '../rating/rating';
@@ -29,6 +32,9 @@ function GuitarPage() {
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [isModalSuccessOpened, setIsModalSuccessOpened] = useState(false);
 
+  const [addToCartModalOpen, setAddToCartModalOpen] = useState(false); // состояние модалки "Добавить в корзину ?"
+  const [addedToCartModalOpen, setAddedToCartModalOpen] = useState(false); // состояние модалки "Товар успешно добавлен"
+
   const sortedComments = currentGuitar.comments?.slice().sort((commentA, commentB) => {
     const dateA = new Date(commentA.createAt).getTime();
     const dateB = new Date(commentB.createAt).getTime();
@@ -48,6 +54,11 @@ function GuitarPage() {
   const handleModalSuccessClose = () => {
     setIsModalSuccessOpened(false);
     dispatch(loadNewCommentSuccessStatus(null));
+  };
+
+  const addToCartButtonClickHandler = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
+    setAddToCartModalOpen(true);
   };
 
   useEffect(() => {
@@ -111,8 +122,8 @@ function GuitarPage() {
         </div>
         <div className="product-container__price-wrapper">
           <p className="product-container__price-info product-container__price-info--title">Цена:</p>
-          <p className="product-container__price-info product-container__price-info--value">{currentGuitar.price} ₽</p>
-          <Link className="button button--red button--big product-container__button" to={AppRoute.getPlugRoute()}>Добавить в корзину</Link>
+          <p className="product-container__price-info product-container__price-info--value">{formatGuitarPrice(currentGuitar.price)} ₽</p>
+          <Link className="button button--red button--big product-container__button" to={AppRoute.getPlugRoute()} onClick={addToCartButtonClickHandler}>Добавить в корзину</Link>
         </div>
       </div>
       <section className="reviews">
@@ -131,12 +142,22 @@ function GuitarPage() {
 
         {
           isModalOpened &&
-          <ModalComment handleModalClose={handleModalClose} guitarName={currentGuitar.name} guitarId={currentGuitar.id} />
+          <ModalComment onModalClose={handleModalClose} guitarName={currentGuitar.name} guitarId={currentGuitar.id} />
         }
 
         {
           isModalSuccessOpened &&
-          <ModalCommentSuccess handleModalSuccessClose={handleModalSuccessClose} />
+          <ModalCommentSuccess onModalSuccessClose={handleModalSuccessClose} />
+        }
+
+        {
+          addToCartModalOpen &&
+          <ModalAddToCart guitar={currentGuitar} onAddToCartModalOpen={setAddToCartModalOpen} onAddedToCartModalOpen={setAddedToCartModalOpen} />
+        }
+
+        {
+          addedToCartModalOpen &&
+          <ModalAddedToCart onAddedToCartModalOpen={setAddedToCartModalOpen} />
         }
 
       </section>

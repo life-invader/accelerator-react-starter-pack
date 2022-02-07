@@ -3,15 +3,14 @@ import { STRINGS_COUNTS } from '../../constants/guitars';
 import { RootState } from '../root-reducer';
 
 export const selectAllGuitars = (state: RootState) => state.guitars.guitars;
-export const selectDisplayedGuitars = (state: RootState) => state.guitars.displayedGuitars;
-export const selectCurrentGuitar = (state: RootState) => state.guitars.currentGuitar;
+export const selectDisplayedGuitars = (state: RootState) => state.guitars.displayedGuitars.data;
+export const selectCurrentGuitar = (state: RootState) => state.guitars.currentGuitar.data;
 export const selectSimilarGuitars = (state: RootState) => state.guitars.similarGuitars;
-export const selectFetchStatus = (state: RootState) => state.guitars.isFetching;
-export const selectErrorStatus = (state: RootState) => state.guitars.isError;
-export const selectCart = (state: RootState) => state.guitars.cart;
+export const selectFetchStatus = (state: RootState) => state.guitars.displayedGuitars.isLoading;
+export const selectErrorStatus = (state: RootState) => state.guitars.displayedGuitars.isError;
 export const selectNewCommentStatus = (state: RootState) => state.guitars.isNewCommentSuccess;
-export const selectCurrentGuitarFetchingStatus = (state: RootState) => state.guitars.isCurrentGuitarFetching;
-export const selectCurrentGuitarErrorStatus = (state: RootState) => state.guitars.isCurrentGuitarError;
+export const selectCurrentGuitarFetchingStatus = (state: RootState) => state.guitars.currentGuitar.isLoading;
+export const selectCurrentGuitarErrorStatus = (state: RootState) => state.guitars.currentGuitar.isError;
 
 export const selectPriceRangePlaceholders = createSelector(selectAllGuitars, (state) => state, (guitars, _state) => {
   if (!guitars.length) { return { priceMin: 0, priceMax: 0 }; }

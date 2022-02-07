@@ -2,13 +2,13 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { State } from '../../store/type';
 import { initialState as guitarInitialState } from '../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../store/pagination/pagination-reducer';
 import GuitarPage from './guitar-page';
+import { RootState } from '../../store/root-reducer';
 
-const mockStore = configureMockStore<State>();
+const mockStore = configureMockStore<RootState>();
 const store = mockStore({
   guitars: {
     ...guitarInitialState,
