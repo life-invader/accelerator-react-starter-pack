@@ -22,7 +22,11 @@ describe('Guitars reducer', () => {
     expect(guitarsReducer(initialState, loadDisplayedGuitars(mockGuitars, totalPages)))
       .toEqual({
         ...initialState,
-        displayedGuitars: mockGuitars,
+        displayedGuitars: {
+          data: mockGuitars,
+          isLoading: false,
+          isError: false,
+        },
       });
   });
 
@@ -38,7 +42,11 @@ describe('Guitars reducer', () => {
     expect(guitarsReducer(initialState, loadFetchStatus(true)))
       .toEqual({
         ...initialState,
-        isFetching: true,
+        displayedGuitars: {
+          data: [],
+          isLoading: true,
+          isError: false,
+        },
       });
   });
 
@@ -46,7 +54,11 @@ describe('Guitars reducer', () => {
     expect(guitarsReducer(initialState, loadErrorStatus(true)))
       .toEqual({
         ...initialState,
-        isError: true,
+        displayedGuitars: {
+          data: [],
+          isLoading: false,
+          isError: true,
+        },
       });
   });
 
@@ -54,7 +66,11 @@ describe('Guitars reducer', () => {
     expect(guitarsReducer(initialState, loadCurrentGuitar(mockGuitar)))
       .toEqual({
         ...initialState,
-        currentGuitar: mockGuitar,
+        currentGuitar: {
+          data: mockGuitar,
+          isLoading: false,
+          isError: false,
+        },
       });
   });
 
@@ -62,7 +78,11 @@ describe('Guitars reducer', () => {
     expect(guitarsReducer(initialState, loadCurrentGuitarFetchStatus(true)))
       .toEqual({
         ...initialState,
-        isCurrentGuitarFetching: true,
+        currentGuitar: {
+          data: {},
+          isLoading: true,
+          isError: false,
+        },
       });
   });
 
@@ -70,7 +90,11 @@ describe('Guitars reducer', () => {
     expect(guitarsReducer(initialState, loadCurrentGuitarErrorStatus(true)))
       .toEqual({
         ...initialState,
-        isCurrentGuitarError: true,
+        currentGuitar: {
+          data: {},
+          isLoading: false,
+          isError: true,
+        },
       });
   });
 
@@ -81,9 +105,7 @@ describe('Guitars reducer', () => {
         data: {
           ...mockGuitar,
           comments: [
-            ...mockGuitar.comments,
-            mockComment,
-          ],
+            ...mockGuitar.comments],
         },
         isLoading: false,
         isError: false,

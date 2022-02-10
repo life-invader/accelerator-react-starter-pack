@@ -51,5 +51,3 @@ export const filtersReducer = createReducer(initialState, (builder) => {
       state.sortType = action.payload;
     });
 });
-
-export type RootReducerType = ReturnType<typeof filtersReducer>;

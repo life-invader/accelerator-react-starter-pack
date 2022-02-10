@@ -26,28 +26,31 @@ export const initialState: CartReducerType = {
   discount: 0,
 };
 
+const calculateCart = (state: CartReducerType) => {
+  state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
+  state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
+};
+
 export const cartReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(addToCart, (state, action) => {
-      const newItem = {
-        item: action.payload,
-        itemAmount: 1,
-      };
-
       if (action.payload.id in state.items) {
         state.items[action.payload.id].itemAmount += 1;
       } else {
+        const newItem = {
+          item: action.payload,
+          itemAmount: 1,
+        };
+
         state.items[action.payload.id] = newItem;
       }
 
-      state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
-      state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
+      calculateCart(state);
     })
     .addCase(removeFromCart, (state, action) => {
       delete state.items[action.payload];
 
-      state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
-      state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
+      calculateCart(state);
     })
     .addCase(increaseItemAmount, (state, action) => {
       state.items[action.payload].itemAmount += 1;
@@ -56,8 +59,7 @@ export const cartReducer = createReducer(initialState, (builder) => {
         state.items[action.payload].itemAmount = MAX_ITEM_AMOUNT;
       }
 
-      state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
-      state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
+      calculateCart(state);
     })
     .addCase(decreaseItemAmount, (state, action) => {
       state.items[action.payload].itemAmount -= 1;
@@ -66,8 +68,7 @@ export const cartReducer = createReducer(initialState, (builder) => {
         delete state.items[action.payload];
       }
 
-      state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
-      state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
+      calculateCart(state);
     })
     .addCase(changeItemAmount, (state, action) => {
       let newAmount = action.payload.newAmount;
@@ -82,8 +83,7 @@ export const cartReducer = createReducer(initialState, (builder) => {
 
       state.items[action.payload.id].itemAmount = newAmount;
 
-      state.cartAmount = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + currentValue.itemAmount, 0);
-      state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
+      calculateCart(state);
     })
     .addCase(loadDiscount, (state, action) => {
       state.discount = action.payload;

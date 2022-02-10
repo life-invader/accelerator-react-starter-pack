@@ -1,16 +1,16 @@
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { RootState } from '../../store/root-reducer';
-import { createMockGuitars } from '../../utils/common';
-import CatalogList from './catalog-list';
 import { initialState as guitarInitialState } from '../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../store/pagination/pagination-reducer';
 import { initialState as cartInitialState } from '../../store/cart/cart-reducer';
+import CartItem from './cart-item';
+import { createMockGuitar } from '../../utils/common';
 
-const displayedGuitars = createMockGuitars();
+const mockGuitar = createMockGuitar();
+
 const mockStore = configureMockStore<RootState>();
 const store = mockStore({
   guitars: {
@@ -27,18 +27,19 @@ const store = mockStore({
   },
 });
 
-describe('Component: CatalogList', () => {
-  it('should render CatalogList component', () => {
+const cartItem = {
+  item: mockGuitar,
+  itemAmount: 5,
+};
+
+describe('Component: CartItem', () => {
+  it('should render CartItem component', () => {
     render(
       <Provider store={store}>
-        <BrowserRouter>
-          <CatalogList displayedGuitars={displayedGuitars} />
-        </BrowserRouter>
+        <CartItem cartItem={cartItem} />
       </Provider>,
     );
 
-    expect(screen.getByText('Рейтинг:')).toBeInTheDocument();
-    expect(screen.getByText('Цена:')).toBeInTheDocument();
-    expect(screen.getByText('Подробнее')).toBeInTheDocument();
+    expect(screen.getByText(/струнная/)).toBeInTheDocument();
   });
 });

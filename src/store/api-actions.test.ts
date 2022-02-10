@@ -7,13 +7,15 @@ import { createMockComment, createMockGuitars, createNewUserCommentMock } from '
 import { loadGuitars, loadDisplayedGuitars, loadSimilarGuitarsByName, loadFetchStatus, loadCurrentGuitarFetchStatus, loadCurrentGuitar, loadNewCommentSuccessStatus, loadNewComment } from './guitars/actions';
 import { Action } from 'redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
-import { fetchGuitars, fetchDisplayedGuitars, fetchSimilarGuitarsByName, fetchCurrentGuitar, sendNewComment } from './api-actions';
+import { fetchGuitars, fetchDisplayedGuitars, fetchSimilarGuitarsByName, fetchCurrentGuitar, sendNewComment, applyPromo } from './api-actions';
 import { initialState as guitarsInitialState } from './guitars/guitars-reducer';
 import { initialState as filtersInitialState } from './filters/filters-reducer';
 import { initialState as paginationInitialState } from './pagination/pagination-reducer';
+import { initialState as cartInitialState } from './cart/cart-reducer';
 import { createMockGuitar } from '../utils/common';
 import { GuitarType, StringsCountType } from '../types/guitar';
 import { RootState } from './root-reducer';
+import { loadDiscount } from './cart/actions';
 
 const mockGuitar = createMockGuitar();
 const mockGuitars = createMockGuitars();
@@ -123,6 +125,27 @@ describe('Async actions', () => {
     expect(store.getActions()).toEqual([
       loadNewCommentSuccessStatus(null),
       loadNewComment(mockComment),
+    ]);
+  });
+
+  it('Should apply promo', async () => {
+    const store = mockStore({
+      cart: {
+        ...cartInitialState,
+      },
+    });
+
+    const coupon = 'promo_code';
+    const couponResponse = 15;
+
+    mockApi
+      .onPost(ApiRoute.Coupons())
+      .reply(200, couponResponse);
+
+    await store.dispatch(applyPromo(coupon));
+
+    expect(store.getActions()).toEqual([
+      loadDiscount(couponResponse),
     ]);
   });
 });

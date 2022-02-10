@@ -1,11 +1,12 @@
 import { useCallback, useEffect } from 'react';
 
+const NUMBER_SYSTEM = 10;
 type UseModalCallbackType = () => void;
 
-export const useModal = (callback: UseModalCallbackType) => {
+export const useModal = (closeModal: UseModalCallbackType) => {
   const blockScroll = () => {
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth; // ширина скролла справа
-    const bodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10) || 0; // отступ справа
+    const bodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), NUMBER_SYSTEM) || 0; // отступ справа
 
     document.body.style.overflow = 'hidden';
     document.body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
@@ -25,9 +26,9 @@ export const useModal = (callback: UseModalCallbackType) => {
       if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
         return;
       }
-      callback();
+      closeModal();
     }
-  }, [callback]);
+  }, [closeModal]);
 
   useEffect(() => {
     document.body.addEventListener('keydown', handleEscapeKeydown);

@@ -8,6 +8,7 @@ import { AppRoute } from '../../constants/routes';
 import { initialState as guitarInitialState } from '../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../store/pagination/pagination-reducer';
+import { initialState as cartInitialState } from '../../store/cart/cart-reducer';
 import { RootState } from '../../store/root-reducer';
 
 const history = createMemoryHistory();
@@ -21,6 +22,9 @@ const store = mockStore({
   },
   pagination: {
     ...paginationInitialState,
+  },
+  cart: {
+    ...cartInitialState,
   },
 });
 

@@ -3,14 +3,12 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { RootState } from '../../store/root-reducer';
-import { createMockGuitars } from '../../utils/common';
-import CatalogList from './catalog-list';
 import { initialState as guitarInitialState } from '../../store/guitars/guitars-reducer';
 import { initialState as filtersInitialState } from '../../store/filters/filters-reducer';
 import { initialState as paginationInitialState } from '../../store/pagination/pagination-reducer';
 import { initialState as cartInitialState } from '../../store/cart/cart-reducer';
+import Cart from './cart';
 
-const displayedGuitars = createMockGuitars();
 const mockStore = configureMockStore<RootState>();
 const store = mockStore({
   guitars: {
@@ -27,18 +25,18 @@ const store = mockStore({
   },
 });
 
-describe('Component: CatalogList', () => {
-  it('should render CatalogList component', () => {
+describe('Component: Cart', () => {
+  it('should render Cart component', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <CatalogList displayedGuitars={displayedGuitars} />
+          <Cart />
         </BrowserRouter>
       </Provider>,
     );
 
-    expect(screen.getByText('Рейтинг:')).toBeInTheDocument();
-    expect(screen.getByText('Цена:')).toBeInTheDocument();
-    expect(screen.getByText('Подробнее')).toBeInTheDocument();
+    expect(screen.getByText('Промокод на скидку')).toBeInTheDocument();
+    expect(screen.getByText('Введите свой промокод, если он у вас есть.')).toBeInTheDocument();
+    expect(screen.getByText('Применить')).toBeInTheDocument();
   });
 });

@@ -2,6 +2,7 @@ import { createAction } from '@reduxjs/toolkit';
 import { ActionType } from '../../constants/action-types';
 import { SortingOrder, SortingType } from '../../types/filters';
 import { GuitarType, StringsCountType } from '../../types/guitar';
+
 export const loadGuitarPriceRange = createAction(ActionType.LOAD_PRICE_RANGE, (priceRange: { priceMin?: number, priceMax?: number }) => ({
   payload: priceRange,
 }));
