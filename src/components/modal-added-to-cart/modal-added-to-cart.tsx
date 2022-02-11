@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppRoute } from '../../constants/routes';
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/use-modal';
 
 type ModalAddedToCartType = {
   onAddedToCartModalOpen: (value: boolean) => void,

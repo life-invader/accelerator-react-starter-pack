@@ -28,8 +28,8 @@ function CatalogPagination() {
 
         {
           emptyTemplates &&
-          emptyTemplates.map((pageNumber, index) => (
-            <li key={`${pageNumber}_${index + 1}`} className={`pagination__page ${pageNumber === currentPage ? 'pagination__page--active' : ''}`} >
+          emptyTemplates.map((pageNumber) => (
+            <li key={pageNumber} className={`pagination__page ${pageNumber === currentPage ? 'pagination__page--active' : ''}`} >
               <Link className='link pagination__page-link' to={getCurrentRouteWithParams(pageNumber)}>{pageNumber}</Link>
             </li>
           ))

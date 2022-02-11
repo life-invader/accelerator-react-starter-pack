@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { formatGuitarPrice } from '../../utils/common';
 import React, { useEffect, useState } from 'react';
 import { applyPromo } from '../../store/api-actions';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { DiscountStatus } from '../../constants/cart';
 
 const DISCOUNT_PLUG = 0;

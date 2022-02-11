@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { GuitarInfo } from '../../constants/guitars';
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/use-modal';
 import { addToCart } from '../../store/cart/actions';
 import { IGuitarWithComments } from '../../types/guitar';
 import { formatGuitarPrice } from '../../utils/common';

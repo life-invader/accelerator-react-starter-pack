@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { GuitarInfo } from '../../constants/guitars';
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/use-modal';
 import { IGuitarWithComments } from '../../types/guitar';
 import { formatGuitarPrice } from '../../utils/common';
 

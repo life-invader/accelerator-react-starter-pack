@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/use-modal';
 import { sendNewComment } from '../../store/api-actions';
 import { GuitarCommentPostType } from '../../types/guitar';
 

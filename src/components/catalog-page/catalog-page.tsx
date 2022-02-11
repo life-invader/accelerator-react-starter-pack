@@ -7,8 +7,8 @@ import CatalogPagination from '../catalog-pagination/catalog-pagination';
 import CatalogList from '../catalog-list/catalog-list';
 import LoadingError from '../loading-error/loading-error';
 import Spinner from '../spinner/spinner';
-import { useCatalog } from '../../hooks/catalog-page/useCatalog';
-import { useFilter } from '../../hooks/catalog-page/useFilter';
+import { useCatalog } from '../../hooks/catalog-page/use-catalog';
+import { useFilter } from '../../hooks/catalog-page/use-filter';
 import { useDispatch } from 'react-redux';
 
 function CatalogPage(): JSX.Element {
