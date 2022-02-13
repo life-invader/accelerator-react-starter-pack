@@ -79,7 +79,7 @@ function Cart() {
             <form className="coupon__form" id="coupon-form" method="post" action="/">
               <div className="form-input coupon__input">
                 <label className="visually-hidden">Промокод</label>
-                <input type="text" placeholder="Введите промокод" id="coupon" name="coupon" value={promo} onChange={(evt) => setPromo(evt.target.value.replaceAll(' ', ''))} />
+                <input type="text" placeholder="Введите промокод" id="coupon" name="coupon" value={promo} onChange={(evt) => setPromo(evt.target.value.replaceAll(' ', '').toLowerCase())} />
 
                 {
                   (isPromoAccepted && !discountError) && <p className="form-input__message form-input__message--success">Промокод принят</p>
