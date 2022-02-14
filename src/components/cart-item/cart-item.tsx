@@ -92,7 +92,7 @@ function CartItem({ cartItem }: CaryItemType) {
               <use xlinkHref="#icon-minus"></use>
             </svg>
           </button>
-          <input className="quantity__input" type="number" placeholder={itemAmount.toString()} value={amount} id="2-count" name="2-count" min={MIN_ITEM_AMOUNT} max={MAX_ITEM_AMOUNT} onChange={itemAmountChangeHandler} onBlur={changeItemAmountBlurHandler} />
+          <input className="quantity__input" type="number" placeholder={itemAmount.toString()} value={amount.toString()} id="2-count" name="2-count" min={MIN_ITEM_AMOUNT} max={MAX_ITEM_AMOUNT} onChange={itemAmountChangeHandler} onBlur={changeItemAmountBlurHandler} />
           <button className="quantity__button" aria-label="Увеличить количество" data-change={ChangeAmountType.Increment} onClick={changeItemAmountButtonClickHandler}>
             <svg width="8" height="8" aria-hidden="true">
               <use xlinkHref="#icon-plus"></use>
