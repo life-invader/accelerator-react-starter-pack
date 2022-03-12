@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { MAX_ITEM_AMOUNT, MIN_ITEM_AMOUNT } from '../../constants/cart';
 import { IGuitarWithComments } from '../../types/guitar';
+import { recoverCart } from '../../utils/store';
 import { addToCart, changeItemAmount, decreaseItemAmount, increaseItemAmount, loadDiscount, removeFromCart } from './actions';
 
 export interface ICartItem {
@@ -31,7 +32,7 @@ const calculateCart = (state: CartReducerType) => {
   state.totalPrice = Object.values(state.items).reduce((accumulator, currentValue) => accumulator + (currentValue.item.price * currentValue.itemAmount), 0);
 };
 
-export const cartReducer = createReducer(initialState, (builder) => {
+export const cartReducer = createReducer(recoverCart() || initialState, (builder) => {
   builder
     .addCase(addToCart, (state, action) => {
       if (action.payload.id in state.items) {
