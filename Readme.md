@@ -2,6 +2,18 @@
 [Деплой на vercel](https://leontyev-accelerator-react-starter-pack.vercel.app/)
 ---
 
+---
+
+## Table of contents
+* [Описание проекта](#Описание)
+* [API](#API)
+* [Директории](#Директории)
+* [Скрипты](#Скрипты)
+
+---
+
+### Описание
+
 Небольшой интернет-магазин по продаже гитар. Состоит из трех страниц: страница каталога, страница товара, корзина.
 Проект сделан на `React - Redux - Redux-thunk - Typescript - Axios`
 
@@ -26,9 +38,86 @@
 * В шапке есть живой поиск
 * Не разработанные страницы закрыты заглушками 404
 
+---
+
 ## Getting Started
 
 ---
+
+### API
+
+URL: https://accelerator-guitar-shop-api-v1.glitch.me
+Список купонов: `light-333`, `medium-444` или `height-555`.
+
+### Список роутов
+
+- GET `/guitars` – получить список гитар.
+- GET `/guitars/1` – получить гитару по идентификатору id.
+- GET `/guitars/1`/comments– получить коментарии гитары по идентификатору id.
+- POST `/comments` – отправить новый комментарий.
+- POST `/coupons` – отправить купон. Если купон валидный, роут возвращает процент - скидки.
+- POST `/orders` – отправить новый заказ.
+
+### Query-параметры
+Фильтры, сортировка и другие query-параметры можно использовать с любым ключем, который есть в любой сущности. В примерах, возле каждого query-параметра только примеры. Их можно добавлять на любой ключ.
+
+### Фильтр
+```
+GET /guitars?name=СURT
+GET /guitars?type=electric
+GET /guitars?name=СURT&type=electric
+```
+
+### Сортировка
+`_sort` и `_order` (`desc` - убывание или `asc` - возрастание. `asc` по-умолчанию)
+
+```
+GET /guitars?_sort=price
+GET /guitars?_sort=rating&_order=asc
+```
+### Диапазон
+
+`_start`, `_end` или `_limit` (`X-Total-Count` заголовок включен в ответ)
+
+```
+GET /guitars?_start=10&_end=20
+GET /guitars?_start=20&_end=30
+GET /guitars?_start=20&_limit=10
+```
+
+### Операторы
+
+`_gte` или `_lte` для получения в диапазоне
+
+
+```
+GET /guitars?price_gte=20000&price_lte=30000
+```
+
+`_like` для частичной схожести
+
+```
+GET /guitars?name_like=Bass
+```
+
+### Связи
+
+`_embed` для добавления связей
+
+```
+GET /guitars?_embed=comments
+GET /guitars/1?_embed=comments
+```
+
+Получить вложенные связи
+
+```
+GET  /guitars/1/comments
+```
+
+---
+
+## Директории
 
 ### public
 
@@ -37,6 +126,10 @@
 ### src
 
 Директория для размещения исходного кода проекта: компоненты, файлы с тестами, модули и т.д.
+
+---
+
+## Скрипты
 
 ### Запуск проекта
 
